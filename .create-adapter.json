@@ -1,0 +1,44 @@
+{
+	"cli": true,
+	"target": "directory",
+	"adapterName": "sec-smart",
+	"title": "SEC Smart",
+	"description": "Integrate the SEC Smart Gateway",
+	"keywords": [
+		"sec",
+		"fan",
+		"control"
+	],
+	"expert": "yes",
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "climate-control",
+	"startMode": "daemon",
+	"connectionType": "cloud",
+	"dataSource": "poll",
+	"connectionIndicator": "yes",
+	"language": "JavaScript",
+	"nodeVersion": "16",
+	"adminUi": "json",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"releaseScript": "yes",
+	"devServer": "yes",
+	"devServerPort": 8081,
+	"indentation": "Tab",
+	"quotes": "double",
+	"es6class": "yes",
+	"authorName": "Daniel P.",
+	"authorGithub": "Dapfen",
+	"authorEmail": "daniel.pfenning@gmail.com",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "yes",
+	"defaultBranch": "main",
+	"license": "MIT License",
+	"dependabot": "yes",
+	"creatorVersion": "2.3.0"
+}
