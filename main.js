@@ -11,6 +11,8 @@ const utils = require("@iobroker/adapter-core");
 // Load your modules here, e.g.:
 // const fs = require("fs");
 
+const axios = require("axios");
+
 class SecSmart extends utils.Adapter {
 
 	/**
@@ -21,6 +23,9 @@ class SecSmart extends utils.Adapter {
 			...options,
 			name: "sec-smart",
 		});
+
+		this.secApiClient = null;
+
 		this.on("ready", this.onReady.bind(this));
 		this.on("stateChange", this.onStateChange.bind(this));
 		// this.on("objectChange", this.onObjectChange.bind(this));
@@ -45,6 +50,35 @@ class SecSmart extends utils.Adapter {
 			this.log.error("API Token is empty - please check instance configuration");
 		}
 
+		if (!this.config.api_url && !this.config.api_token) {
+			this.log.debug("Axios Api laden!");
+			this.secApiClient = axios.create({
+				baseURL: `${this.config.api_url}`,
+				headers: {"Authorization": "basic "+ this.config.api_token},
+				timeout: 1000,
+				responseType: "json",
+				responseEncoding: "utf8"
+			}) 
+
+			} else {
+				this.log.debug("Axios Api nicht laden!");
+			};
+
+			try {
+				const deviceInfoResponse = await this.secApiClient.get("/devices");
+				this.log.debug(`deviceInfoResponse ${JSON.stringify(deviceInfoResponse.status)}: ${JSON.stringify(deviceInfoResponse.data)}`);
+
+				if (deviceInfoResponse.status === 200) {
+					const deviceInfo = deviceInfoResponse.data;
+
+					await this.setStateAsync("deviceInfo.type", {val: deviceInfo.type, ack: true});
+					await this.setStateAsync("deviceInfo.name", {val: deviceInfo.name, ack: true});
+					await this.setStateAsync("deviceInfo.id", {val: deviceInfo.deviceid, ack: true});
+				}
+			} catch (err) {
+				this.log.error(err);
+			}
+		}
 
 
 
