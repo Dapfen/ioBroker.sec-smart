@@ -7,7 +7,7 @@
 			"type": "panel",
 			"label": "Options",
 			"items": {
-				"api_url": {
+				"apiUrl": {
 					"type": "text",
 					"sm": 12,
 					"md": 6,
@@ -15,7 +15,7 @@
 					"label": "API URL",
 					"help": "Fill in the SEC-Smart API URL"	
 				},
-				"api_token": {
+				"apiToken": {
 					"type": "text",
 					"sm": 12,
 					"md": 6,

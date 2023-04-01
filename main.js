@@ -42,113 +42,132 @@ class SecSmart extends utils.Adapter {
 		// Reset the connection indicator during startup
 		this.setState("info.connection", false, true);
 
-		if (!this.config.api_url) {
+		if (!this.config.apiUrl) {
 			this.log.error("API URL is empty - please check instance configuration");
 		}
 
-		if (!this.config.api_token) {
+		if (!this.config.apiToken) {
 			this.log.error("API Token is empty - please check instance configuration");
 		}
 
-		if (!this.config.api_url && !this.config.api_token) {
-			this.log.debug("Axios Api laden!");
+		if (this.config.apiUrl && this.config.apiToken) {
 			this.secApiClient = axios.create({
-				baseURL: `${this.config.api_url}`,
-				headers: {"Authorization": "basic "+ this.config.api_token},
+				baseURL: `${this.config.apiUrl}`,
+				headers: {"Authorization": "Bearer "+ this.config.apiToken},
 				timeout: 1000,
 				responseType: "json",
 				responseEncoding: "utf8"
-			}) 
+			});
 
-			} else {
-				this.log.debug("Axios Api nicht laden!");
-			};
-
-			try {
-				const deviceInfoResponse = await this.secApiClient.get("/devices");
-				this.log.debug(`deviceInfoResponse ${JSON.stringify(deviceInfoResponse.status)}: ${JSON.stringify(deviceInfoResponse.data)}`);
-
-				if (deviceInfoResponse.status === 200) {
-					const deviceInfo = deviceInfoResponse.data;
-
-					await this.setStateAsync("deviceInfo.type", {val: deviceInfo.type, ack: true});
-					await this.setStateAsync("deviceInfo.name", {val: deviceInfo.name, ack: true});
-					await this.setStateAsync("deviceInfo.id", {val: deviceInfo.deviceid, ack: true});
-				}
-			} catch (err) {
-				this.log.error(err);
-			}
 		}
 
+		try {
+			const deviceInfoResponse = await this.secApiClient.get("/devices");
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// The adapters config (in the instance object everything under the attribute "native") is accessible via
-		// this.config:
-		
-		// this.log.info("config option1: " + this.config.option1);
-		// this.log.info("config option2: " + this.config.option2);
-
-		/*
-		For every state in the system there has to be also an object of type state
-		Here a simple template for a boolean variable named "testVariable"
-		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-		*/
-		/* 
-		await this.setObjectNotExistsAsync("testVariable", {
-			type: "state",
-			common: {
-				name: "testVariable",
-				type: "boolean",
-				role: "indicator",
-				read: true,
-				write: true,
-			},
-			native: {},
-		});
-		*/
-
-		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		
-		// this.subscribeStates("testVariable");
-		
-		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
-		// this.subscribeStates("lights.*");
-		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:
-		// this.subscribeStates("*");
-
-		/*
-			setState examples
-			you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-		*/
-		// the variable testVariable is set to true as command (ack=false)
-		await this.setStateAsync("testVariable", true);
-
-		// same thing, but the value is flagged "ack"
-		// ack should be always set to true if the value is received from or acknowledged from the target system
-		await this.setStateAsync("testVariable", { val: true, ack: true });
-
-		// same thing, but the state is deleted after 30s (getState will return null afterwards)
-		await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-
-		// examples for the checkPassword/checkGroup functions
-		let result = await this.checkPasswordAsync("admin", "iobroker");
-		this.log.info("check user admin pw iobroker: " + result);
-
-		result = await this.checkGroupAsync("admin", "admin");
-		this.log.info("check group user admin group admin: " + result);
+			if (deviceInfoResponse.status === 200) {
+				const deviceInfo = deviceInfoResponse.data;
+				for (const device of deviceInfo) {
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid, {
+						type: "device",
+						common: {
+							name: {
+								"en": "Device",
+								"de": "Gerät",
+								"ru": "Устройства",
+								"pt": "Dispositivo",
+								"nl": "Vernietiging",
+								"fr": "Dispositif",
+								"it": "Dispositivo",
+								"es": "Dispositivo",
+								"pl": "Device",
+								"uk": "Пристрої",
+								"zh-cn": "证人"
+							},
+							type: "string",
+							role: "text"
+						},
+						native: {}
+					});
+					await this.createChannelAsync("Gateway " + device.deviceid, "Info", {
+						name:{
+							"en": "Device information",
+							"de": "Informationen zum Gerät",
+							"ru": "Информация об устройстве",
+							"pt": "InformaÃ§Ãμes do dispositivo",
+							"nl": "Vernietig informatie",
+							"fr": "Information sur les dispositifs",
+							"it": "Informazioni sul dispositivo",
+							"es": "Información sobre dispositivos",
+							"pl": "Data dostępu",
+							"uk": "Інформація про пристрій",
+							"zh-cn": "证人信息"
+						}});
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
+						"name": {
+							"en": "Device id",
+							"de": "Geräte-ID",
+							"ru": "Устройство id",
+							"pt": "Id do dispositivo",
+							"nl": "Vernietiging",
+							"fr": "Appareil id",
+							"it": "Dispositivo id",
+							"es": "Dispositivo id",
+							"pl": "Device id (ang.)",
+							"uk": "Пристрої id",
+							"zh-cn": "Device id"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": false,
+						"def": device.deviceid
+					});
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "type", {
+						"name": {
+							"en": "Device type",
+							"de": "Gerätetyp",
+							"ru": "Тип устройства",
+							"pt": "Tipo de dispositivo",
+							"nl": "Device type",
+							"fr": "Type de dispositif",
+							"it": "Tipo di dispositivo",
+							"es": "Tipo de dispositivo",
+							"pl": "Device type",
+							"uk": "Тип пристрою",
+							"zh-cn": "2. 证人类型"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": false,
+						"def": device.type
+					});
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "name", {
+						"name": {
+							"en": "Device name",
+							"de": "Bezeichnung des Geräts",
+							"ru": "Наименование устройства",
+							"pt": "Nome do dispositivo",
+							"nl": "Devicenaam",
+							"fr": "Nom du dispositif",
+							"it": "Nome del dispositivo",
+							"es": "Nombre del dispositivo",
+							"pl": "Device name",
+							"uk": "Назва пристрою",
+							"zh-cn": "证人姓名"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": true,
+						"def": device.name
+					});
+					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
+				}
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
 	}
 
 	/**
@@ -192,6 +211,22 @@ class SecSmart extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
 	onStateChange(id, state) {
+		const splitState = id.split(".");
+		this.log.info(state.ack);
+		if (splitState[3] == "Info" && splitState[4] == "name" && state.ack === false) {
+			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
+				if (err) {
+					this.log.error(err);
+				} else {
+					const deviceId = deviceState.val;
+					if(deviceId) {
+						if(this.changeDeviceName(deviceId, state.val)) {
+							this.setState(id, {val: state.val, ack: true});
+						}
+					}
+				}
+			});
+		}
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -201,6 +236,14 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
+	changeDeviceName(id, name) {
+		try {
+			const deviceName = this.secApiClient.put("/devices/" + id + "/name", {"name": name});
+			return true;
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
 	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
 	// /**
 	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
