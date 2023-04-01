@@ -1,5 +1,7 @@
 {
-	"sec-smart adapter settings": "Adapterinstellingen voor sec-smart",
-	"option1": "Optie 1",
-	"option2": "Optie 2"
+    "sec-smart adapter settings": "Adapterinstellingen voor SEC-Smart",
+    "API URL": "API-URL",
+    "Fill in the SEC-Smart API URL": "Vul de URL van de SEC-Smart API in",
+    "API Token": "API-token",
+    "Fill in your API Token from your SEC-Smart Gateway": "Vul uw API Token van uw SEC-Smart Gateway in"
 }

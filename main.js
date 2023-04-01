@@ -37,16 +37,42 @@ class SecSmart extends utils.Adapter {
 		// Reset the connection indicator during startup
 		this.setState("info.connection", false, true);
 
+		if (!this.config.api_url) {
+			this.log.error("API URL is empty - please check instance configuration");
+		}
+
+		if (!this.config.api_token) {
+			this.log.error("API Token is empty - please check instance configuration");
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		// The adapters config (in the instance object everything under the attribute "native") is accessible via
 		// this.config:
-		this.log.info("config option1: " + this.config.option1);
-		this.log.info("config option2: " + this.config.option2);
+		
+		// this.log.info("config option1: " + this.config.option1);
+		// this.log.info("config option2: " + this.config.option2);
 
 		/*
 		For every state in the system there has to be also an object of type state
 		Here a simple template for a boolean variable named "testVariable"
 		Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
 		*/
+		/* 
 		await this.setObjectNotExistsAsync("testVariable", {
 			type: "state",
 			common: {
@@ -58,9 +84,12 @@ class SecSmart extends utils.Adapter {
 			},
 			native: {},
 		});
+		*/
 
 		// In order to get state updates, you need to subscribe to them. The following line adds a subscription for our variable we have created above.
-		this.subscribeStates("testVariable");
+		
+		// this.subscribeStates("testVariable");
+		
 		// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 		// this.subscribeStates("lights.*");
 		// Or, if you really must, you can also watch all states. Don't do this if you don't need to. Otherwise this will cause a lot of unnecessary load on the system:

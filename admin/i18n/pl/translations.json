@@ -1,5 +1,7 @@
 {
-	"sec-smart adapter settings": "Ustawienia adaptera dla sec-smart",
-	"option1": "opcja 1",
-	"option2": "Opcja 2"
+    "sec-smart adapter settings": "Ustawienia adaptera dla SEC-Smart",
+    "API URL": "URL interfejsu API",
+    "Fill in the SEC-Smart API URL": "Wpisz adres URL interfejsu API SEC-Smart",
+    "API Token": "Token API",
+    "Fill in your API Token from your SEC-Smart Gateway": "Wypełnij swój token API ze swojej bramki SEC-Smart"
 }

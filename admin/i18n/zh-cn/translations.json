@@ -1,5 +1,7 @@
 {
-	"sec-smart adapter settings": "sec-smart的适配器设置",
-	"option1": "选项1",
-	"option2": "选项2"
+    "sec-smart adapter settings": "SEC-Smart 的适配器设置",
+    "API URL": "接口地址",
+    "Fill in the SEC-Smart API URL": "填写 SEC-Smart API URL",
+    "API Token": "API令牌",
+    "Fill in your API Token from your SEC-Smart Gateway": "从您的 SEC-Smart 网关填写您的 API 令牌"
 }

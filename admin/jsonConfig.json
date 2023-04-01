@@ -1,16 +1,29 @@
 {
 	"i18n": true,
-	"type": "panel",
+	"type": "tabs",
+	
 	"items": {
-		"option1": {
-			"type": "checkbox",
-			"label": "option1",
-			"newLine": true
+		"options": {
+			"type": "panel",
+			"label": "Options",
+			"items": {
+				"api_url": {
+					"type": "text",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "API URL",
+					"help": "Fill in the SEC-Smart API URL"	
+				},
+				"api_token": {
+					"type": "text",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "API Token",
+					"help": "Fill in your API Token from your SEC-Smart Gateway"	
+				}
+			}
 		},
-		"option2": {
-			"type": "text",
-			"label": "option2",
-			"newLine": true
-		}
 	}
 }
