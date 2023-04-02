@@ -40,6 +40,7 @@ class SecSmart extends utils.Adapter {
 		// Initialize your adapter here
 
 		// Reset the connection indicator during startup
+		this.subscribeStates("*");
 		this.setState("info.connection", false, true);
 
 		if (!this.config.apiUrl) {
@@ -431,8 +432,6 @@ class SecSmart extends utils.Adapter {
 					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
 
 					this.setAreas(device.deviceid);
-
-					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
 				}
 			}
 		} catch (err) {
