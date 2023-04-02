@@ -122,9 +122,6 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
-		this.log.info(id);
-		this.log.info(this.namespace);
-
 		if (splitState[4] == "mode" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
@@ -132,10 +129,9 @@ class SecSmart extends utils.Adapter {
 				} else {
 					const deviceId = deviceState.val;
 					if(deviceId) {
-						const areaId = splitState[3].slice(-1);
-						if (this.changeAreaData(deviceId, areaId, state.val)) {
+						const areaSelected = splitState[3];
+						if (this.changeAreaData(deviceId, areaSelected, state.val)) {
 							this.setState(id, {val: state.val, ack: true});
-							this.log.info("test2");
 						}
 					}
 				}
@@ -162,8 +158,12 @@ class SecSmart extends utils.Adapter {
 
 	changeAreaData(id, area, mode) {
 		try {
-		//			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
-
+			const areaId = parseInt(area.slice(-1));
+			this.log.info("/devices/" + id + "/areas/mode");
+			this.log.info(areaId);
+			this.log.info(mode);
+			this.secApiClient.put("/devices/" + id + "/areas/mode", {"areaid": areaId, "mode": mode});
+			return true;
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -295,7 +295,7 @@ class SecSmart extends utils.Adapter {
 					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
 
 					this.setAreas(device.deviceid);
-
+//					this.setSettings(device.deviceid);
 					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
 				}
 			}
@@ -476,6 +476,59 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_mode", {val: data.mode, ack: true});
 		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_time", {val: data.time, ack: true});
 	}
+
+	/*
+	// Add/Update settings - does not work yet
+	async setSettings(id) {
+		try {
+			const SettingsResponse = await this.secApiClient.get("/devices/" + id + "/settings");
+			this.log.info(SettingsResponse);
+
+			if (SettingsResponse.status === 200) {
+				this.setSettingsData(id, SettingsResponse.data);
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+	async setSettingsData(id, SettingsData) {
+		await this.createChannelAsync("Gateway " + id, "Settings", {
+			"name": {
+				"en": "Settings",
+				"de": "Einstellungen",
+				"ru": "Настройки",
+				"pt": "Configurações",
+				"nl": "Setting",
+				"fr": "Réglages",
+				"it": "Impostazioni impostazioni",
+				"es": "Ajustes",
+				"pl": "Setting",
+				"uk": "Налаштування",
+				"zh-cn": "确定"
+			},
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "Humidity", {
+			"name": {
+				"en": "Humidity",
+				"de": "Luftfeuchtigkeit",
+				"ru": "Влажность",
+				"pt": "Humidade",
+				"nl": "Humid",
+				"fr": "Humidité",
+				"it": "Umidità",
+				"es": "Humedad",
+				"pl": "Humity",
+				"uk": "Вологість",
+				"zh-cn": "死 情"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": false
+		});
+		this.log.info(SettingsData);
+	}
+	*/
 }
 
 if (require.main !== module) {
