@@ -80,7 +80,7 @@
         ]
     },
     "native": {
-        "apiUrl": "https://api.sec-smart.app/v1/devices",
+        "apiUrl": "https://api.sec-smart.app/v1/",
         "apiToken": ""
     },
     "objects": [],
