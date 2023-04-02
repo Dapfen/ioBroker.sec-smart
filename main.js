@@ -121,6 +121,26 @@ class SecSmart extends utils.Adapter {
 				}
 			});
 		}
+
+		this.log.info(id);
+
+		if (splitState[4] == "mode" && state.ack === false) {
+			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
+				if (err) {
+					this.log.error(err);
+				} else {
+					const deviceId = deviceState.val;
+					if(deviceId) {
+						const areaId = splitState[3].slice(-1);
+						if (this.changeAreaData(deviceId, areaId, state.val)) {
+							this.setState(id, {val: state.val, ack: true});
+							this.log.info("test2");
+						}
+					}
+				}
+			});
+		}
+
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -133,6 +153,15 @@ class SecSmart extends utils.Adapter {
 	changeDeviceName(id, name) {
 		try {
 			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
+			return true;
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
+	changeAreaData(id, area, mode) {
+		try {
+//			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
 			return true;
 		} catch (err) {
 			this.log.error(err);
@@ -156,6 +185,125 @@ class SecSmart extends utils.Adapter {
 	// 	}
 	// }
 
+	// Add/update devices
+	async setDevices() {
+		try {
+			const deviceInfoResponse = await this.secApiClient.get("/devices");
+
+			if (deviceInfoResponse.status === 200) {
+				this.setState("info.connection", true, true);
+				const deviceInfo = deviceInfoResponse.data;
+				for (const device of deviceInfo) {
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid, {
+						type: "device",
+						common: {
+							name: {
+								"en": "Device",
+								"de": "Gerät",
+								"ru": "Устройства",
+								"pt": "Dispositivo",
+								"nl": "Vernietiging",
+								"fr": "Dispositif",
+								"it": "Dispositivo",
+								"es": "Dispositivo",
+								"pl": "Device",
+								"uk": "Пристрої",
+								"zh-cn": "证人"
+							},
+							type: "string",
+							role: "text"
+						},
+						native: {}
+					});
+					// create Info channel
+					await this.createChannelAsync("Gateway " + device.deviceid, "Info", {
+						name:{
+							"en": "Device information",
+							"de": "Informationen zum Gerät",
+							"ru": "Информация об устройстве",
+							"pt": "InformaÃ§Ãμes do dispositivo",
+							"nl": "Vernietig informatie",
+							"fr": "Information sur les dispositifs",
+							"it": "Informazioni sul dispositivo",
+							"es": "Información sobre dispositivos",
+							"pl": "Data dostępu",
+							"uk": "Інформація про пристрій",
+							"zh-cn": "证人信息"
+						}});
+						// add/update state for device infos
+						await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
+						"name": {
+							"en": "Device id",
+							"de": "Geräte-ID",
+							"ru": "Устройство id",
+							"pt": "Id do dispositivo",
+							"nl": "Vernietiging",
+							"fr": "Appareil id",
+							"it": "Dispositivo id",
+							"es": "Dispositivo id",
+							"pl": "Device id (ang.)",
+							"uk": "Пристрої id",
+							"zh-cn": "Device id"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": false
+					});
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "type", {
+						"name": {
+							"en": "Device type",
+							"de": "Gerätetyp",
+							"ru": "Тип устройства",
+							"pt": "Tipo de dispositivo",
+							"nl": "Device type",
+							"fr": "Type de dispositif",
+							"it": "Tipo di dispositivo",
+							"es": "Tipo de dispositivo",
+							"pl": "Device type",
+							"uk": "Тип пристрою",
+							"zh-cn": "2. 证人类型"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": false
+					});
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "name", {
+						"name": {
+							"en": "Device name",
+							"de": "Bezeichnung des Geräts",
+							"ru": "Наименование устройства",
+							"pt": "Nome do dispositivo",
+							"nl": "Devicenaam",
+							"fr": "Nom du dispositif",
+							"it": "Nome del dispositivo",
+							"es": "Nombre del dispositivo",
+							"pl": "Device name",
+							"uk": "Назва пристрою",
+							"zh-cn": "证人姓名"
+						},
+						"role": "text",
+						"type": "string",
+						"read": true,
+						"write": true
+					});
+
+					await this.setStateAsync("Gateway " + device.deviceid + ".Info.id", {val: device.deviceid, ack: true});
+					await this.setStateAsync("Gateway " + device.deviceid + ".Info.type", {val: device.type, ack: true});
+					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
+
+					this.setAreas(device.deviceid);
+
+					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
+				}
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
+	// add/update channels for areas
 	async setAreas(id) {
 		try {
 			const areasInfoResponse = await this.secApiClient.get("/devices/" + id + "/areas");
@@ -171,6 +319,7 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
+	// Add/update datapoints in areas
 	async setArea(id, area, data) {
 		await this.createChannelAsync("Gateway " + id, area, {
 			name:{
@@ -239,14 +388,15 @@ class SecSmart extends utils.Adapter {
 				"INACTIVE":"INACTIVE"
 			}
 		});
-
 		await this.setStateAsync("Gateway " + id + "." + area + ".label", {val: data.label, ack: true});
 		await this.setStateAsync("Gateway " + id + "." + area + ".mode", {val: data.mode, ack: true});
-
+		this.subscribeStates("Gateway " + id + "." + area + ".label");
+		this.subscribeStates("Gateway " + id + "." + area + ".mode");
 		for(const i in data.timers)
 			this.setTimers(id, area, i, data.timers[i]);
 	}
 
+	// Add/Update datapoints timers in areas
 	async setTimers(id, area, timer, data) {
 		await this.createStateAsync("Gateway " + id, area, timer + "_active", {
 			"name": {
@@ -325,120 +475,6 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_mode", {val: data.mode, ack: true});
 		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_time", {val: data.time, ack: true});
 	}
-
-	async setDevices() {
-		try {
-			const deviceInfoResponse = await this.secApiClient.get("/devices");
-
-			if (deviceInfoResponse.status === 200) {
-				this.setState("info.connection", true, true);
-				const deviceInfo = deviceInfoResponse.data;
-				for (const device of deviceInfo) {
-					await this.setObjectNotExistsAsync("Gateway " + device.deviceid, {
-						type: "device",
-						common: {
-							name: {
-								"en": "Device",
-								"de": "Gerät",
-								"ru": "Устройства",
-								"pt": "Dispositivo",
-								"nl": "Vernietiging",
-								"fr": "Dispositif",
-								"it": "Dispositivo",
-								"es": "Dispositivo",
-								"pl": "Device",
-								"uk": "Пристрої",
-								"zh-cn": "证人"
-							},
-							type: "string",
-							role: "text"
-						},
-						native: {}
-					});
-					await this.createChannelAsync("Gateway " + device.deviceid, "Info", {
-						name:{
-							"en": "Device information",
-							"de": "Informationen zum Gerät",
-							"ru": "Информация об устройстве",
-							"pt": "InformaÃ§Ãμes do dispositivo",
-							"nl": "Vernietig informatie",
-							"fr": "Information sur les dispositifs",
-							"it": "Informazioni sul dispositivo",
-							"es": "Información sobre dispositivos",
-							"pl": "Data dostępu",
-							"uk": "Інформація про пристрій",
-							"zh-cn": "证人信息"
-						}});
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
-						"name": {
-							"en": "Device id",
-							"de": "Geräte-ID",
-							"ru": "Устройство id",
-							"pt": "Id do dispositivo",
-							"nl": "Vernietiging",
-							"fr": "Appareil id",
-							"it": "Dispositivo id",
-							"es": "Dispositivo id",
-							"pl": "Device id (ang.)",
-							"uk": "Пристрої id",
-							"zh-cn": "Device id"
-						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": false
-					});
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "type", {
-						"name": {
-							"en": "Device type",
-							"de": "Gerätetyp",
-							"ru": "Тип устройства",
-							"pt": "Tipo de dispositivo",
-							"nl": "Device type",
-							"fr": "Type de dispositif",
-							"it": "Tipo di dispositivo",
-							"es": "Tipo de dispositivo",
-							"pl": "Device type",
-							"uk": "Тип пристрою",
-							"zh-cn": "2. 证人类型"
-						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": false
-					});
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "name", {
-						"name": {
-							"en": "Device name",
-							"de": "Bezeichnung des Geräts",
-							"ru": "Наименование устройства",
-							"pt": "Nome do dispositivo",
-							"nl": "Devicenaam",
-							"fr": "Nom du dispositif",
-							"it": "Nome del dispositivo",
-							"es": "Nombre del dispositivo",
-							"pl": "Device name",
-							"uk": "Назва пристрою",
-							"zh-cn": "证人姓名"
-						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": true
-					});
-
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.id", {val: device.deviceid, ack: true});
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.type", {val: device.type, ack: true});
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
-
-					this.setAreas(device.deviceid);
-				}
-			}
-		} catch (err) {
-			this.log.error(err);
-		}
-	}
-
 }
 
 if (require.main !== module) {
