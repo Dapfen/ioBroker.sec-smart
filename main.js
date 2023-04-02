@@ -123,6 +123,7 @@ class SecSmart extends utils.Adapter {
 		}
 
 		this.log.info(id);
+		this.log.info(this.namespace);
 
 		if (splitState[4] == "mode" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
@@ -161,8 +162,8 @@ class SecSmart extends utils.Adapter {
 
 	changeAreaData(id, area, mode) {
 		try {
-//			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
-			return true;
+		//			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
+
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -230,8 +231,8 @@ class SecSmart extends utils.Adapter {
 							"uk": "Інформація про пристрій",
 							"zh-cn": "证人信息"
 						}});
-						// add/update state for device infos
-						await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
+					// add/update state for device infos
+					await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
 						"name": {
 							"en": "Device id",
 							"de": "Geräte-ID",
