@@ -118,7 +118,7 @@ class SecSmart extends utils.Adapter {
 							this.setState(id, {val: state.val, ack: true});
 						}
 					}
-				}
+				}	
 			});
 		}
 
@@ -138,29 +138,37 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
-		if (splitState[3] == "Settings" && splitState[4] == "FilterResetIntervall" && state.ack === false) {
-			this.getState(splitState[2] + ".Settings.FilterResetIntervall",(err, deviceState) => {
+		if (splitState[3] == "Settings" && splitState[4] == "FilterResetIntervall" && state.ack === false || splitState[3] == "Settings" && splitState[4] == "FilterRemainingTimeReset" && state.ack === false) {
+			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
 					this.log.error(err);
 				} else {
 					const deviceId = deviceState.val;
 					if(deviceId) {
-						this.log.info(state.val);
-						if(this.changeFilterResetIntervall(deviceId, state.val)) {
-							this.setState(id, {val: state.val, ack: true});
+
+						if(this.changeFilterResetIntervall(deviceId)) {
+
+							let newValue;
+
+							if(splitState[4] == "FilterResetIntervall") {
+								newValue = state.val;
+							} else {
+								newValue = false;
+							}
+							this.setState(id, {val: newValue, ack: true});
 						}
 					}
 				}
 			});
 		}
 
-		if (state) {
-			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-		} else {
-			// The state was deleted
-			this.log.info(`state ${id} deleted`);
-		}
+		//		if (state) {
+		//			// The state was changed
+		//			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+		//		} else {
+		//			// The state was deleted
+		//			this.log.info(`state ${id} deleted`);
+		//		}
 	}
 
 	changeDeviceName(id, name) {
@@ -185,16 +193,19 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
-	changeFilterResetIntervall(id, newResetTimer) {
+	async changeFilterResetIntervall(id) {
 		try {
-			const setResetTimerArray = {
+			const filterResetIntervall = await this.getStateAsync("Gateway " + id + ".Settings.FilterResetIntervall");
+			const filterRemainingTimeReset = await this.getStateAsync("Gateway " + id + ".Settings.FilterRemainingTimeReset");
+
+			const setResetTimerJson = {
 				"filter":{
-					"maxRunTime": newResetTimer,
-					"reset": false
+					"maxRunTime": filterResetIntervall.val,
+					"reset": filterRemainingTimeReset.val
 				}
 			};
-			this.log.info(JSON.stringify(setResetTimerArray));
-//			this.secApiClient.put("/devices/" + id + "/settings/filter", {setResetTimerArray);
+
+			this.secApiClient.put("/devices/" + id + "/settings/filter", setResetTimerJson);
 			return true;
 		} catch (err) {
 			this.log.error(err);
@@ -329,7 +340,6 @@ class SecSmart extends utils.Adapter {
 
 					this.setAreas(device.deviceid);
 					this.setSettings(device.deviceid);
-					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
 				}
 			}
 		} catch (err) {
@@ -424,8 +434,7 @@ class SecSmart extends utils.Adapter {
 		});
 		await this.setStateAsync("Gateway " + id + "." + area + ".label", {val: data.label, ack: true});
 		await this.setStateAsync("Gateway " + id + "." + area + ".mode", {val: data.mode, ack: true});
-		this.subscribeStates("Gateway " + id + "." + area + ".label");
-		this.subscribeStates("Gateway " + id + "." + area + ".mode");
+
 		for(const i in data.timers)
 			this.setTimers(id, area, i, data.timers[i]);
 	}
