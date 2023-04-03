@@ -295,7 +295,7 @@ class SecSmart extends utils.Adapter {
 					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
 
 					this.setAreas(device.deviceid);
-//					this.setSettings(device.deviceid);
+					this.setSettings(device.deviceid);
 					this.subscribeStates("Gateway " + device.deviceid + ".Info.name");
 				}
 			}
@@ -477,15 +477,16 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_time", {val: data.time, ack: true});
 	}
 
-	/*
+
 	// Add/Update settings - does not work yet
 	async setSettings(id) {
 		try {
 			const SettingsResponse = await this.secApiClient.get("/devices/" + id + "/settings");
-			this.log.info(SettingsResponse);
+			this.log.info("Try 1");
 
 			if (SettingsResponse.status === 200) {
 				this.setSettingsData(id, SettingsResponse.data);
+				this.log.info("Abruf erfolgreicher");
 			}
 		} catch (err) {
 			this.log.error(err);
@@ -507,28 +508,150 @@ class SecSmart extends utils.Adapter {
 				"zh-cn": "确定"
 			},
 		});
+		await this.createStateAsync("Gateway " + id, "Settings", "ResetFilterTime", {
+			"name": {
+				"en": "Remaining filter run time in days.",
+				"de": "Rest Filterlaufzeit in Tagen.",
+				"ru": "Оставшееся время запуска фильтра в днях.",
+				"pt": "Permanecendo tempo de execução do filtro em dias.",
+				"nl": "Weer filtertijd in dagen.",
+				"fr": "Durée du filtre restante en jours.",
+				"it": "Mantenere il tempo di funzionamento del filtro in giorni.",
+				"es": "Permanecer el tiempo de funcionamiento del filtro en días.",
+				"pl": "Zmniejszenie filtra trwa w ciągu kilku dni.",
+				"uk": "Термін дії фільтра в день.",
+				"zh-cn": "时间过长。."
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "CO2", {
+			"name": {
+				"en": "Actual sensor value of CO² in ppm.",
+				"de": "Tatsächlicher Sensorwert von CO2 in ppm.",
+				"ru": "Фактическое значение датчика CO2 в ppm.",
+				"pt": "Valor de sensor real de CO2 em ppm.",
+				"nl": "Actuele sensorwaarde van CO2 in ppm.",
+				"fr": "Valeur réelle du capteur de CO2 en ppm.",
+				"it": "Valore effettivo del sensore di CO2 in ppm.",
+				"es": "Valor sensor real de CO2 en ppm.",
+				"pl": "Wartość czujnika CO2 w ppm.",
+				"uk": "Фактичне значення датчика CO2 в ppm.",
+				"zh-cn": "CO2的实际传感器,ppm。."
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
 		await this.createStateAsync("Gateway " + id, "Settings", "Humidity", {
 			"name": {
-				"en": "Humidity",
-				"de": "Luftfeuchtigkeit",
-				"ru": "Влажность",
-				"pt": "Humidade",
-				"nl": "Humid",
-				"fr": "Humidité",
-				"it": "Umidità",
-				"es": "Humedad",
-				"pl": "Humity",
-				"uk": "Вологість",
-				"zh-cn": "死 情"
+				"en": "Actual sensor value of humidity",
+				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit",
+				"ru": "Фактическое значение датчика влажности",
+				"pt": "Valor do sensor real da umidade",
+				"nl": "Actuele sensorwaarde van vochtigheid",
+				"fr": "Valeur réelle du capteur d ' humidité",
+				"it": "Valore effettivo del sensore di umidità",
+				"es": "Valor sensor real de humedad",
+				"pl": "Aktualna wartość czujnika wilgotności",
+				"uk": "Фактичне значення датчика вологості",
+				"zh-cn": "湿度的实际传感"
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "SleepTime", {
+			"name": {
+				"en": "Sleep Time",
+				"de": "Zeit für Schlafmodus",
+				"ru": "Время сна",
+				"pt": "Tempo de sono",
+				"nl": "Slaap",
+				"fr": "Temps de sommeil",
+				"it": "Tempo di sonno",
+				"es": "Hora de dormir",
+				"pl": "Sleep Time (ang.)",
+				"uk": "Час сну",
+				"zh-cn": "时间"
+			  },
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "DeviceTime", {
+			"name": {
+				"en": "Device Time",
+				"de": "Zeit des Geräts",
+				"ru": "Время устройства",
+				"pt": "Tempo do dispositivo",
+				"nl": "Device Time",
+				"fr": "Heure",
+				"it": "Tempo del dispositivo",
+				"es": "Tiempo de dispositivo",
+				"pl": "Data czasu",
+				"uk": "Час пристрою",
+				"zh-cn": "时间"
 			},
 			"role": "text",
 			"type": "string",
 			"read": true,
 			"write": false
 		});
-		this.log.info(SettingsData);
+		await this.createStateAsync("Gateway " + id, "Settings", "DeviceDate", {
+			"name": {
+				"en": "Device Date",
+				"de": "Datum des Gerätes",
+				"ru": "Дата устройства",
+				"pt": "Data do dispositivo",
+				"nl": "Vertaling:",
+				"fr": "Date du dispositif",
+				"it": "Data del dispositivo",
+				"es": "Fecha del dispositivo",
+				"pl": "Device Date",
+				"uk": "Дата пристрою",
+				"zh-cn": "目 录"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "SummerMode", {
+			"name": {
+				"en": "Sommer modus",
+				"de": "Sommermodus",
+				"ru": "Sommer модус",
+				"pt": "Sommer modus",
+				"nl": "Sommer modus",
+				"fr": "Sommer modus",
+				"it": "Sommer modus",
+				"es": "Sommer modus",
+				"pl": "Sommer modus",
+				"uk": "Соммер модус",
+				"zh-cn": "中小企业"
+			},
+			"role": "text",
+			"type": "boolean",
+			"read": true,
+			"write": false
+		});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".ResetFilterTime", {val: SettingsData.filter.maxRunTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
+		//funktioniert noch nicht set sommermode
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".SummerMode", {val: SettingsData.sommermode, ack: true});
+		this.log.info(JSON.stringify(SettingsData));
 	}
-	*/
+
 }
 
 if (require.main !== module) {
