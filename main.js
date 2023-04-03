@@ -204,7 +204,7 @@ class SecSmart extends utils.Adapter {
 					"reset": filterRemainingTimeReset.val
 				}
 			};
-
+			this.log.info(JSON.stringify(setResetTimerJson));
 			this.secApiClient.put("/devices/" + id + "/settings/filter", setResetTimerJson);
 			return true;
 		} catch (err) {
@@ -567,6 +567,9 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "number",
 			"read": true,
+			"min": 70,
+			"max": 270,
+			"step": 10,
 			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTime", {
@@ -582,7 +585,7 @@ class SecSmart extends utils.Adapter {
 				"pl": "czas filtrowania",
 				"uk": "фільтр часу",
 				"zh-cn": "时间过长"
-			  },
+			},
 			"role": "text",
 			"type": "number",
 			"read": true,
