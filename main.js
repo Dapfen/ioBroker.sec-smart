@@ -138,6 +138,22 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
+		if (splitState[3] == "Settings" && splitState[4] == "FilterResetIntervall" && state.ack === false) {
+			this.getState(splitState[2] + ".Settings.FilterResetIntervall",(err, deviceState) => {
+				if (err) {
+					this.log.error(err);
+				} else {
+					const deviceId = deviceState.val;
+					if(deviceId) {
+						this.log.info(state.val);
+						if(this.changeFilterResetIntervall(deviceId, state.val)) {
+							this.setState(id, {val: state.val, ack: true});
+						}
+					}
+				}
+			});
+		}
+
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -168,6 +184,23 @@ class SecSmart extends utils.Adapter {
 			this.log.error(err);
 		}
 	}
+
+	changeFilterResetIntervall(id, newResetTimer) {
+		try {
+			const setResetTimerArray = {
+				"filter":{
+					"maxRunTime": newResetTimer,
+					"reset": false
+				}
+			};
+			this.log.info(JSON.stringify(setResetTimerArray));
+//			this.secApiClient.put("/devices/" + id + "/settings/filter", {setResetTimerArray);
+			return true;
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
 	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
 	// /**
 	//  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
@@ -478,7 +511,7 @@ class SecSmart extends utils.Adapter {
 	}
 
 
-	// Add/Update settings - does not work yet
+	// Add/Update settings
 	async setSettings(id) {
 		try {
 			const SettingsResponse = await this.secApiClient.get("/devices/" + id + "/settings");
@@ -508,24 +541,62 @@ class SecSmart extends utils.Adapter {
 				"zh-cn": "确定"
 			},
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "ResetFilterTime", {
+		await this.createStateAsync("Gateway " + id, "Settings", "FilterResetIntervall", {
 			"name": {
-				"en": "Remaining filter run time in days.",
-				"de": "Rest Filterlaufzeit in Tagen.",
-				"ru": "Оставшееся время запуска фильтра в днях.",
-				"pt": "Permanecendo tempo de execução do filtro em dias.",
-				"nl": "Weer filtertijd in dagen.",
-				"fr": "Durée du filtre restante en jours.",
-				"it": "Mantenere il tempo di funzionamento del filtro in giorni.",
-				"es": "Permanecer el tiempo de funcionamiento del filtro en días.",
-				"pl": "Zmniejszenie filtra trwa w ciągu kilku dni.",
-				"uk": "Термін дії фільтра в день.",
-				"zh-cn": "时间过长。."
+				"en": "Filter change intervall",
+				"de": "Filterwechselintervall",
+				"ru": "Фильтр изменить интервал",
+				"pt": "Intervalo de mudança de filtro",
+				"nl": "Filter verandering inval",
+				"fr": "Intervalle de changement de filtre",
+				"it": "Intervallo di cambio filtro",
+				"es": "Intervalo de cambio de filtro",
+				"pl": "Przesunięcie graniczne",
+				"uk": "Інтервал зміни фільтра",
+				"zh-cn": "B. 瓦利的改变"
 			},
 			"role": "text",
 			"type": "number",
 			"read": true,
+			"write": true
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTime", {
+			"name": {
+				"en": "remaining time filter",
+				"de": "Restlaufzeit Filter",
+				"ru": "оставшийся фильтр времени",
+				"pt": "filtro de tempo restante",
+				"nl": "overblijvende tijd filter",
+				"fr": "temps restant",
+				"it": "filtro tempo rimanente",
+				"es": "filtro de tiempo restante",
+				"pl": "czas filtrowania",
+				"uk": "фільтр часу",
+				"zh-cn": "时间过长"
+			  },
+			"role": "text",
+			"type": "number",
+			"read": true,
 			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTimeReset", {
+			"name": {
+				"en": "reset filter remaining time",
+				"de": "Restlaufzeit Filter zurücksetzen",
+				"ru": "сброс фильтра оставшееся время",
+				"pt": "redefinir o tempo restante do filtro",
+				"nl": "filter overgebleven tijd",
+				"fr": "reset filter temps restant",
+				"it": "reset filtro tempo rimanente",
+				"es": "filtro restante tiempo",
+				"pl": "filtry resetowe",
+				"uk": "скидання фільтра, що залишився час",
+				"zh-cn": "时间过长"
+			  },
+			"role": "text",
+			"type": "boolean",
+			"read": true,
+			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "CO2", {
 			"name": {
@@ -582,7 +653,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "number",
 			"read": true,
-			"write": false
+			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "DeviceTime", {
 			"name": {
@@ -639,9 +710,12 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "boolean",
 			"read": true,
-			"write": false
 		});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".ResetFilterTime", {val: SettingsData.filter.maxRunTime, ack: true});
+		const setRemainingTime = 0;
+		const setResetFalse = false;
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterRemainingTime", {val: setRemainingTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
