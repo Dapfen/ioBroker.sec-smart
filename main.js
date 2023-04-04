@@ -12,6 +12,7 @@ const utils = require("@iobroker/adapter-core");
 // const fs = require("fs");
 
 const axios = require("axios");
+const { stringify } = require("querystring");
 
 class SecSmart extends utils.Adapter {
 
@@ -138,29 +139,20 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
-		if (splitState[3] == "Settings" && splitState[4] == "FilterResetIntervall" && state.ack === false || splitState[3] == "Settings" && splitState[4] == "FilterRemainingTimeReset" && state.ack === false) {
+		if (splitState[3] == "Settings" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
 					this.log.error(err);
 				} else {
 					const deviceId = deviceState.val;
+					const changedState = splitState[4];
 					if(deviceId) {
-
-						if(this.changeFilterResetIntervall(deviceId)) {
-
-							let newValue;
-
-							if(splitState[4] == "FilterResetIntervall") {
-								newValue = state.val;
-							} else {
-								newValue = false;
-							}
-							this.setState(id, {val: newValue, ack: true});
-						}
+						this.changeSettings(deviceId, changedState, state.val);
 					}
 				}
 			});
 		}
+
 
 		//		if (state) {
 		//			// The state was changed
@@ -169,6 +161,84 @@ class SecSmart extends utils.Adapter {
 		//			// The state was deleted
 		//			this.log.info(`state ${id} deleted`);
 		//		}
+	}
+
+	async changeSettings(id, changedState, stateVal){
+		if (changedState == "FilterResetIntervall" || changedState == "FilterRemainingTimeReset"){
+			try {
+				const filterResetIntervall = await this.getStateAsync("Gateway " + id + ".Settings.FilterResetIntervall");
+				const filterRemainingTimeReset = await this.getStateAsync("Gateway " + id + ".Settings.FilterRemainingTimeReset");
+				if(changedState == "FilterResetIntervall") {
+					switch (true){
+						case (Number(filterResetIntervall.val) < 90):
+							stateVal = 90;
+							filterResetIntervall.val = 90;
+							break;
+						case (Number(filterResetIntervall.val) > 270):
+							stateVal = 270;
+							filterResetIntervall.val = 270;
+							break;
+					}
+				}
+				const setResetTimerJson = {
+					"filter":{
+						"maxRunTime": filterResetIntervall.val,
+						"reset": filterRemainingTimeReset.val
+					}
+				};
+				this.secApiClient.put("/devices/" + id + "/settings/filter", setResetTimerJson);
+				let newValue;
+				if(changedState == "FilterResetIntervall") {
+					newValue = stateVal;
+				} else {
+					newValue = false;
+				}
+				this.setState("Gateway "+ id + ".Settings." + changedState, {val: newValue, ack: true});
+				return true;
+			} catch (err) {
+				this.log.error(err);
+			}
+		}
+		if (changedState == "Humidity" || changedState == "CO2"){
+			try {
+				const newHumidity = await this.getStateAsync("Gateway " + id + ".Settings.Humidity");
+				const newCO2 = await this.getStateAsync("Gateway " + id + ".Settings.CO2");
+				const setCO2_HumidityJson = {
+					"thresholds":{
+						"humidity": newHumidity.val,
+						"co2": newCO2.val
+					}
+				};
+				this.secApiClient.put("/devices/" + id + "/settings/thresholds", setCO2_HumidityJson);
+				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				return true;
+			} catch (err) {
+				this.log.error(err);
+			}
+		}
+		if (changedState == "SleepTime"){
+			try {
+				const newSleepTime = await this.getStateAsync("Gateway " + id + ".Settings.SleepTime");
+				switch (true){
+					case (Number(newSleepTime.val) < 10):
+						stateVal = 10;
+						newSleepTime.val = 10;
+						break;
+					case (Number(newSleepTime.val) > 250):
+						stateVal = 250;
+						newSleepTime.val = 250;
+						break;
+				}
+				const setSleepTimeJson = {
+					"sleepTime": newSleepTime.val
+				};
+				this.secApiClient.put("/devices/" + id + "/settings/sleep-time", setSleepTimeJson);
+				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				return true;
+			} catch (err) {
+				this.log.error(err);
+			}
+		}
 	}
 
 	changeDeviceName(id, name) {
@@ -193,24 +263,6 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
-	async changeFilterResetIntervall(id) {
-		try {
-			const filterResetIntervall = await this.getStateAsync("Gateway " + id + ".Settings.FilterResetIntervall");
-			const filterRemainingTimeReset = await this.getStateAsync("Gateway " + id + ".Settings.FilterRemainingTimeReset");
-
-			const setResetTimerJson = {
-				"filter":{
-					"maxRunTime": filterResetIntervall.val,
-					"reset": filterRemainingTimeReset.val
-				}
-			};
-			this.log.info(JSON.stringify(setResetTimerJson));
-			this.secApiClient.put("/devices/" + id + "/settings/filter", setResetTimerJson);
-			return true;
-		} catch (err) {
-			this.log.error(err);
-		}
-	}
 
 	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
 	// /**
@@ -340,6 +392,7 @@ class SecSmart extends utils.Adapter {
 
 					this.setAreas(device.deviceid);
 					this.setSettings(device.deviceid);
+					this.setTelemetry(device.deviceid);
 				}
 			}
 		} catch (err) {
@@ -524,11 +577,8 @@ class SecSmart extends utils.Adapter {
 	async setSettings(id) {
 		try {
 			const SettingsResponse = await this.secApiClient.get("/devices/" + id + "/settings");
-			this.log.info("Try 1");
-
 			if (SettingsResponse.status === 200) {
 				this.setSettingsData(id, SettingsResponse.data);
-				this.log.info("Abruf erfolgreicher");
 			}
 		} catch (err) {
 			this.log.error(err);
@@ -567,29 +617,10 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "number",
 			"read": true,
-			"min": 70,
+			"min": 90,
 			"max": 270,
 			"step": 10,
 			"write": true
-		});
-		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTime", {
-			"name": {
-				"en": "remaining time filter",
-				"de": "Restlaufzeit Filter",
-				"ru": "оставшийся фильтр времени",
-				"pt": "filtro de tempo restante",
-				"nl": "overblijvende tijd filter",
-				"fr": "temps restant",
-				"it": "filtro tempo rimanente",
-				"es": "filtro de tiempo restante",
-				"pl": "czas filtrowania",
-				"uk": "фільтр часу",
-				"zh-cn": "时间过长"
-			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": false
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTimeReset", {
 			"name": {
@@ -627,7 +658,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "number",
 			"read": true,
-			"write": false
+			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "Humidity", {
 			"name": {
@@ -646,7 +677,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "number",
 			"read": true,
-			"write": false
+			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, "Settings", "SleepTime", {
 			"name": {
@@ -661,9 +692,11 @@ class SecSmart extends utils.Adapter {
 				"pl": "Sleep Time (ang.)",
 				"uk": "Час сну",
 				"zh-cn": "时间"
-			  },
+			},
 			"role": "text",
 			"type": "number",
+			"min": 10,
+			"max": 250,
 			"read": true,
 			"write": true
 		});
@@ -722,11 +755,10 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "boolean",
 			"read": true,
+			"write": true
 		});
-		const setRemainingTime = 0;
 		const setResetFalse = false;
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterRemainingTime", {val: setRemainingTime, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
@@ -735,9 +767,156 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
 		//funktioniert noch nicht set sommermode
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".SummerMode", {val: SettingsData.sommermode, ack: true});
-		this.log.info(JSON.stringify(SettingsData));
 	}
-
+	// Add/Update telemetry data
+	async setTelemetry(id) {
+		try {
+			const TelemetryResponse = await this.secApiClient.get("/devices/" + id + "/telemetry");
+			if (TelemetryResponse.status === 200) {
+				this.log.info("Try 1");
+				this.setTelemetryData(id, TelemetryResponse.data);
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+	async setTelemetryData(id, TelemetryData) {
+		await this.createChannelAsync("Gateway " + id, "Telemetry", {
+			"name": {
+				"en": "Telemetry",
+				"de": "Telemetrie",
+				"ru": "Телеметрия",
+				"pt": "Telemetria",
+				"nl": "Telemetrie",
+				"fr": "Télémétrie",
+				"it": "Telemetria",
+				"es": "Telemetría",
+				"pl": "Telemetria",
+				"uk": "Телеметрія",
+				"zh-cn": "电话测量"
+			},
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "restFilterTime", {
+			"name": {
+				"en": "Remaining filter run time in days",
+				"de": "Rest Filterlaufzeit in Tagen",
+				"ru": "Оставшееся время запуска фильтра в днях",
+				"pt": "Permanecendo tempo de execução do filtro em dias",
+				"nl": "Weer filtertijd in dagen",
+				"fr": "Durée du filtre restante en jours",
+				"it": "Mantenere il tempo di funzionamento del filtro in giorni",
+				"es": "Permanecer el tiempo de funcionamiento del filtro en días",
+				"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
+				"uk": "Термін дії фільтра в день",
+				"zh-cn": "时间过长。"
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "CO2", {
+			"name": {
+				"en": "Actual sensor value of CO² in ppm",
+				"de": "Tatsächlicher Sensorwert von CO2 in ppm",
+				"ru": "Фактическое значение датчика CO2 в ppm",
+				"pt": "Valor do sensor real de CO2 em ppm",
+				"nl": "Actuele sensorwaarde van CO2 in ppm",
+				"fr": "Valeur réelle du capteur de CO2 en ppm",
+				"it": "Valore effettivo del sensore di CO2 in ppm",
+				"es": "Valor sensor real de CO2 en ppm",
+				"pl": "Wartość czujnika CO2 w ppm",
+				"uk": "Фактичне значення датчика CO2 в ppm",
+				"zh-cn": "CO2的实际传感器,ppm"
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "humidity", {
+			"name": {
+				"en": "Actual sensor value of humidity in %",
+				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit in %",
+				"ru": "Фактическое значение датчика влажности в %",
+				"pt": "Valor do sensor real da umidade em %",
+				"nl": "Actuele sensorwaarde van vochtigheid in %",
+				"fr": "Valeur réelle de l'humidité en %",
+				"it": "Valore effettivo del sensore di umidità in %",
+				"es": "Valor sensor real de humedad en %",
+				"pl": "Aktualna wartość czujnika wilgotności w %",
+				"uk": "Фактичне значення датчика вологості в %",
+				"zh-cn": "湿度的实际传感"
+			},
+			"role": "text",
+			"type": "number",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "tempInside", {
+			"name": {
+				"en": "Actual sensor value of room temperature in °C",
+				"de": "Tatsächlicher Sensorwert der Raumtemperatur in °C",
+				"ru": "Фактическое значение датчика комнатной температуры в °C",
+				"pt": "Valor do sensor real da temperatura ambiente em °C",
+				"nl": "Actuele sensorwaarde van kamertemperatuur in het centrum",
+				"fr": "Valeur réelle de la température ambiante en °C",
+				"it": "Valore effettivo del sensore della temperatura ambiente in °C",
+				"es": "Valor sensor real de temperatura ambiente en °C",
+				"pl": "Wartość czujnika temperatury pomieszczeń w °C",
+				"uk": "Фактичне значення датчика температури приміщення в °C",
+				"zh-cn": "°C室温度的实际传感器"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "tempOutside", {
+			"name": {
+				"en": "Actual sensor value of outside temperature in °C",
+				"de": "Ist-Sensorwert der Außentemperatur in °C",
+				"ru": "Фактическое значение датчика наружной температуры в °C",
+				"pt": "Valor do sensor real da temperatura exterior em °C",
+				"nl": "Actuele sensorwaarde van buitenste temperatuur in °C",
+				"fr": "Valeur réelle de la température extérieure en °C",
+				"it": "Valore effettivo del sensore della temperatura esterna in °C",
+				"es": "Valor sensor real de la temperatura exterior en °C",
+				"pl": "Wartość czujnika zewnętrznego w temperaturze °C",
+				"uk": "Фактичне значення датчика зовнішньої температури в °C",
+				"zh-cn": "°C外部温度的实际传感器"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": false
+		});
+		await this.createStateAsync("Gateway " + id, "Telemetry", "uptime", {
+			"name": {
+				"en": "Uptime of the SEC Smart system",
+				"de": "Bisherige Laufzeit des SEC Smart Systems",
+				"ru": "Uptime системы SEC Smart",
+				"pt": "Tempo de funcionamento do sistema SEC Smart",
+				"nl": "Quality over Quantity (QoQ) Releases Vertaling:",
+				"fr": "Temps de mise à jour du système intelligent SEC",
+				"it": "Tempo di avanzamento del sistema SEC Smart",
+				"es": "Tiempo de actualización del sistema SEC Smart",
+				"pl": "System SEC Smart",
+				"uk": "Час роботи системи SEC Smart",
+				"zh-cn": "ECSmart系统的时间"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": false
+		});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".uptime", {val: TelemetryData.uptime, ack: true});
+	}
 }
 
 if (require.main !== module) {
