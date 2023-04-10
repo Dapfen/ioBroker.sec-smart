@@ -111,7 +111,7 @@ class SecSmart extends utils.Adapter {
 		if (splitState[3] == "Info" && splitState[4] == "name" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
-					this.log.error(err);
+					this.log.error(JSON.stringify(err));
 				} else {
 					const deviceId = deviceState.val;
 					if(deviceId) {
@@ -119,14 +119,14 @@ class SecSmart extends utils.Adapter {
 							this.setState(id, {val: state.val, ack: true});
 						}
 					}
-				}	
+				}
 			});
 		}
 
 		if (splitState[4] == "mode" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
-					this.log.error(err);
+					this.log.error(JSON.stringify(err));
 				} else {
 					const deviceId = deviceState.val;
 					if(deviceId) {
@@ -139,10 +139,25 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
+		if (splitState[3].slice(0,4) == "area" && splitState[4].slice(0,5) == "timer" && state.ack === false) {
+			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
+				if (err) {
+					this.log.error(JSON.stringify(err));
+				} else {
+					const deviceId = deviceState.val;
+					if(deviceId) {
+						const areaSelected = splitState[3];
+						const changedState = splitState[4];
+						this.changeAreaTimers(deviceId, areaSelected, changedState, state.val);
+					}
+				}
+			});
+		}
+
 		if (splitState[3] == "Settings" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
-					this.log.error(err);
+					this.log.error(JSON.stringify(err));
 				} else {
 					const deviceId = deviceState.val;
 					const changedState = splitState[4];
@@ -239,9 +254,22 @@ class SecSmart extends utils.Adapter {
 				this.log.error(err);
 			}
 		}
+		if (changedState == "SummerMode"){
+			try {
+				const newSummerMode = await this.getStateAsync("Gateway " + id + ".Settings.SummerMode");
+				const setSummerModeJson = {
+					"summermode": newSummerMode.val
+				};
+				this.secApiClient.put("/devices/" + id + "/settings/summermode", setSummerModeJson);
+				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				return true;
+			} catch (err) {
+				this.log.error(err);
+			}
+		}
 	}
 
-	changeDeviceName(id, name) {
+	async changeDeviceName(id, name) {
 		try {
 			this.secApiClient.put("/devices/" + id + "/name", {"name": name});
 			return true;
@@ -250,18 +278,62 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
-	changeAreaData(id, area, mode) {
+	async changeAreaData(id, area, mode) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			this.log.info("/devices/" + id + "/areas/mode");
-			this.log.info(areaId);
-			this.log.info(mode);
 			this.secApiClient.put("/devices/" + id + "/areas/mode", {"areaid": areaId, "mode": mode});
 			return true;
 		} catch (err) {
 			this.log.error(err);
 		}
 	}
+
+	async changeAreaTimers(id, area, changedState, stateVal) {
+		try {
+			const areaId = parseInt(area.slice(-1));
+			const areasInfoResponse = await this.secApiClient.get("/devices/" + id + "/areas");
+			if (areasInfoResponse.status === 200) {
+				const apiTimers = areasInfoResponse.data[area]["timers"];
+				let newTimerJSON = '{"areaid":'+ areaId + ',"timers":{';
+				let timerCount = 1;
+				for (const key in apiTimers) {
+					const appTimerActive = await this.getStateAsync("Gateway "+ id + "." + area + "." + "timer" + timerCount + "_active");
+					const appTimerMode = await this.getStateAsync("Gateway "+ id + "." + area + "." + "timer" + timerCount + "_mode");
+					const appTimerTime = await this.getStateAsync("Gateway "+ id + "." + area + "." + "timer" + timerCount + "_time");
+					newTimerJSON = newTimerJSON + '"timer' + timerCount + '":{';
+					if (apiTimers[key]["active"] == appTimerActive.val){
+						newTimerJSON = newTimerJSON + '"active":' + apiTimers[key]["active"] + ",";
+					} else {
+						newTimerJSON = newTimerJSON + '"active":' + appTimerActive.val + ",";
+					}
+					if (apiTimers[key]["mode"] == appTimerMode.val){
+						newTimerJSON = newTimerJSON + '"mode":"' + apiTimers[key]["mode"] + '",';
+					} else {
+						newTimerJSON = newTimerJSON + '"mode":"' + appTimerMode.val + '",';
+					}
+					if (apiTimers[key]["time"] == appTimerTime.val){
+						newTimerJSON = newTimerJSON + '"time":"' + apiTimers[key]["time"] + '"';
+					} else {
+						newTimerJSON = newTimerJSON + '"time":"' + appTimerTime.val + '"';
+					}
+					timerCount++;
+					newTimerJSON = newTimerJSON + "},";
+				}
+				newTimerJSON = newTimerJSON.slice(0, -1);
+				newTimerJSON = newTimerJSON + "}}";
+				newTimerJSON = JSON.parse(newTimerJSON);
+				this.secApiClient.put("/devices/" + id + "/areas/timeprogram", newTimerJSON);
+				this.setState("Gateway "+ id + ".area" + areaId + "." + changedState, {val: stateVal, ack: true});
+				return true;
+			}
+			else {
+				return false;
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
 
 
 	// If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
@@ -393,6 +465,7 @@ class SecSmart extends utils.Adapter {
 					this.setAreas(device.deviceid);
 					this.setSettings(device.deviceid);
 					this.setTelemetry(device.deviceid);
+					this.setSetup(device.deviceid);
 				}
 			}
 		} catch (err) {
@@ -416,6 +489,7 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
+	
 	// Add/update datapoints in areas
 	async setArea(id, area, data) {
 		await this.createChannelAsync("Gateway " + id, area, {
@@ -511,7 +585,7 @@ class SecSmart extends utils.Adapter {
 			"role": "state",
 			"type": "boolean",
 			"read": true,
-			"write": false
+			"write": true
 		});
 		await this.createStateAsync("Gateway " + id, area, timer + "_mode", {
 			"name": {
@@ -635,7 +709,7 @@ class SecSmart extends utils.Adapter {
 				"pl": "filtry resetowe",
 				"uk": "скидання фільтра, що залишився час",
 				"zh-cn": "时间过长"
-			  },
+			},
 			"role": "text",
 			"type": "boolean",
 			"read": true,
@@ -752,7 +826,7 @@ class SecSmart extends utils.Adapter {
 				"uk": "Соммер модус",
 				"zh-cn": "中小企业"
 			},
-			"role": "text",
+			"role": "state",
 			"type": "boolean",
 			"read": true,
 			"write": true
@@ -766,14 +840,13 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
 		//funktioniert noch nicht set sommermode
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".SummerMode", {val: SettingsData.sommermode, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings" + ".SummerMode", {val: SettingsData.summermode, ack: true});
 	}
 	// Add/Update telemetry data
 	async setTelemetry(id) {
 		try {
 			const TelemetryResponse = await this.secApiClient.get("/devices/" + id + "/telemetry");
 			if (TelemetryResponse.status === 200) {
-				this.log.info("Try 1");
 				this.setTelemetryData(id, TelemetryResponse.data);
 			}
 		} catch (err) {
@@ -917,6 +990,321 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".uptime", {val: TelemetryData.uptime, ack: true});
 	}
+
+	async setSetup(id) {
+		try {
+			const SetupResponse = await this.secApiClient.get("/devices/" + id + "/setup");
+			if (SetupResponse.status === 200) {
+				this.setSetupData(id, SetupResponse.data);
+			}
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
+	async setSetupData(id, setupData) {
+		await this.createChannelAsync("Gateway " + id, "Setup_fans", {
+			"name": {
+				"en": "Returns the device subobject setup for the URL-encoded device ID.",
+				"de": "Gibt den Geräte-Setup für die Geräte-ID zurück.",
+				"ru": "Возвращает установку подобъектов устройства для URL-кодированного устройства ID.",
+				"pt": "Retorna a configuração subobjeto do dispositivo para o ID do dispositivo codificado por URL.",
+				"nl": "Verwijdert het apparaat onderobject voor de URL-gecodeerde apparaat ID.",
+				"fr": "Renvoie la configuration de sous-objet de l'appareil pour l'ID de périphérique codé par URL.",
+				"it": "Restituisce la configurazione subobject del dispositivo per l'ID del dispositivo codificato dall'URL.",
+				"es": "Devuelve la configuración subobjeto del dispositivo para el ID del dispositivo codificado por URL.",
+				"pl": "Powraca podobiznę podobizną dla URL-encoded device ID.",
+				"uk": "Повертає налаштування підоб'єкта пристрою для ідентифікатора URL-кодованого пристрою.",
+				"zh-cn": "恢复化解装置的装置分包。."
+			},
+		});
+		const systemInfo = setupData.systems;
+		for(const i in systemInfo) {
+			this.setSystemsSetup(id, i, systemInfo[i]);
+		}
+		const areaInfo = setupData.areas;
+		for(const i in areaInfo) {
+			this.setAreaSetup(id, i, areaInfo[i]);
+		}
+		await this.createChannelAsync("Gateway " + id, "Setup_inputDi", {
+			"name": {
+				"en": "Set up the configuration for the digital input.",
+				"de": "Richten Sie die Konfiguration für den digitalen Eingang ein.",
+				"ru": "Настройте конфигурацию для цифрового входа.",
+				"pt": "Configure a configuração para a entrada digital.",
+				"nl": "Zet de configuratie op voor de digitale input.",
+				"fr": "Configuration de l'entrée numérique.",
+				"it": "Impostare la configurazione per l'ingresso digitale.",
+				"es": "Configurar la configuración para la entrada digital.",
+				"pl": "Ustanowić konfigurację wejściówki cyfrowej.",
+				"uk": "Налаштування цифрового входу.",
+				"zh-cn": "建立数字投入组合。."
+			},
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputDi", "function", {
+			"name": {
+				"en": "Response when triggered by digital input",
+				"de": "Antwort beim Auslösen durch digitale Eingabe",
+				"ru": "Ответ при запуске цифрового входа",
+				"pt": "Resposta quando acionado por entrada digital",
+				"nl": "Verantwoording toen de digitale input",
+				"fr": "Réponse lorsque déclenchée par l'entrée numérique",
+				"it": "Risposta quando attivato da ingresso digitale",
+				"es": "Respuesta cuando se activa por entrada digital",
+				"pl": "Response kiedy sprowadza się wejściem cyfrowym",
+				"uk": "Відповідь при запуску цифрового введення",
+				"zh-cn": "数字投入引起的反应"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": true,
+			"states": {
+				"None":"None",
+				"Set fan stage 0":"Set fan stage 0",
+				"Set fan stage 1":"Set fan stage 1",
+				"Set fan stage 2":"Set fan stage 2",
+				"Set fan stage 3":"Set fan stage 3",
+				"Set fan stage 4":"Set fan stage 4",
+				"Set fan stage 5":"Set fan stage 5",
+				"Set fan stage 6":"Set fan stage 6",
+				"Set boost ventilation":"Set boost ventilation",
+				"Set to snooze":"Set to snooze",
+				"Set to automatic timer":"",
+				"Set to CO2":"Set to CO2",
+				"Set to humidity":"Set to humidity",
+				"Reset filter":"Reset filter",
+				"Keep fan stage 0":"Keep fan stage 0",
+				"Keep fan stage 1":"Keep fan stage 1",
+				"Keep fan stage 2":"Keep fan stage 2",
+				"Keep fan stage 3":"Keep fan stage 3",
+				"Keep fan stage 4":"Keep fan stage 4",
+				"Keep fan stage 5":"Keep fan stage 5",
+				"Keep fan stage 6":"Keep fan stage 6",
+				"Keep boost ventilation":"Keep boost ventilation",
+				"Keep at automatic timer":"Keep at automatic timer",
+				"Keep at CO2":"Keep at CO2",
+				"Keep at humidity":"Keep at humidity"
+			}
+		});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".function", {val: setupData.inputDi.function, ack: true});
+		const areaDigitalInput = setupData.inputDi.areas;
+		for(const i in areaDigitalInput) {
+			this.setDigitalInput(id, i, areaDigitalInput[i]);
+		}
+		await this.createChannelAsync("Gateway " + id, "Setup_outputDo", {
+			"name": {
+				"en": "Set up the configuration for the digital output.",
+				"de": "Richten Sie die Konfiguration für den digitalen Ausgang ein.",
+				"ru": "Настройте конфигурацию для цифрового вывода.",
+				"pt": "Configure a configuração para a saída digital.",
+				"nl": "Zet de configuratie op voor de digitale uitput.",
+				"fr": "Configuration de la sortie numérique.",
+				"it": "Impostare la configurazione per l'output digitale.",
+				"es": "Configurar la configuración para la salida digital.",
+				"pl": "Ustanowić konfigurację cyfrowej produkcji.",
+				"uk": "Налаштування цифрового виходу.",
+				"zh-cn": "建立数字产出组合。."
+			},
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_outputDo", "function", {
+			"name": {
+				"en": "Response to signal via digital output",
+				"de": "Antwort auf das Signal über den digitalen Ausgang",
+				"ru": "Ответ на сигнал через цифровой выход",
+				"pt": "Resposta ao sinal via saída digital",
+				"nl": "Vertaling:",
+				"fr": "Réponse au signal via la sortie numérique",
+				"it": "Risposta al segnale tramite uscita digitale",
+				"es": "Respuesta a la señal mediante salida digital",
+				"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
+				"uk": "Відповідь на сигнал через цифровий вихід",
+				"zh-cn": "通过数字产出对信号的反应"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": true,
+			"states": {
+				"None":"None",
+				"Fan stage 0 active":"Fan stage 0 active",
+				"Fan stage 1 active":"Fan stage 1 active",
+				"Fan stage 2 active":"Fan stage 2 active",
+				"Fan stage 3 active":"Fan stage 3 active",
+				"Fan stage 4 active":"Fan stage 4 active",
+				"Fan stage 5 active":"Fan stage 5 active",
+				"Fan stage 6 active":"Fan stage 6 active",
+				"Boost ventilation active":"Boost ventilation active",
+				"Snooze mode active":"Snooze mode active",
+				"All areas fan stage 0":"All areas fan stage 0",
+				"Automatic timer active":"Automatic timer active",
+				"CO2 active":"CO2 active",
+				"Humidity active":"Humidity active",
+				"Filter exhausted":"Filter exhausted",
+				"General message":"General message",
+				"General error":"General error"
+			}
+		});
+		await this.setStateAsync("Gateway " + id + ".Setup_outputDo" + ".function", {val: setupData.outputDo.function, ack: true});
+		const areaDigitalOutput = setupData.outputDo.areas;
+		for(const i in areaDigitalOutput) {
+			this.setDigitalOutput(id, i, areaDigitalOutput[i]);
+		}
+	}
+
+	async setSystemsSetup(id, system, data) {
+		try {
+			const systemId = parseInt(system.slice(-1));
+			await this.createStateAsync("Gateway " + id, "Setup_fans", "system" + systemId + "_type", {
+				"name": {
+					"en": "Remaining filter run time in days",
+					"de": "Rest Filterlaufzeit in Tagen",
+					"ru": "Оставшееся время запуска фильтра в днях",
+					"pt": "Permanecendo tempo de execução do filtro em dias",
+					"nl": "Weer filtertijd in dagen",
+					"fr": "Durée du filtre restante en jours",
+					"it": "Mantenere il tempo di funzionamento del filtro in giorni",
+					"es": "Permanecer el tiempo de funcionamiento del filtro en días",
+					"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
+					"uk": "Термін дії фільтра в день",
+					"zh-cn": "时间过长。"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": true,
+				"states": {
+					"None":"None",
+					"SEVi160":"SEVi160",
+					"SEVi200":"SEVi200",
+					"SEVi160D Mini Exhaust":"SEVi160D Mini Exhaust",
+					"SEVi160D Mini":"SEVi160D Mini",
+					"SEVi160 S":"SEVi160 S",
+					"SEVi160 Eco":"SEVi160 Eco",
+					"SEVi160 PRO-S":"SEVi160 PRO-S",
+					"SEVi160 PRO-ECO":"SEVi160 PRO-ECO",
+					"SEVi160D Mini PRO Exh":"SEVi160D Mini PRO Exh",
+					"SEVi160D Mini PRO":"SEVi160D Mini PRO",
+					"Configurable Device":"Configurable Device",
+				}
+			});
+			await this.createStateAsync("Gateway " + id, "Setup_fans", "system" + systemId + "_installedOnArea", {
+				"name": {
+					"en": "installed in area",
+					"de": "installiert im Bereich",
+					"ru": "установленный в зоне",
+					"pt": "instalado na área",
+					"nl": "geïnstalleerd in de buurt",
+					"fr": "installé dans la zone",
+					"it": "installato in area",
+					"es": "instalado en la zona",
+					"pl": "zainstalowany na obszarze",
+					"uk": "встановлена в зоні",
+					"zh-cn": "在该地区安装"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": true,
+			});
+			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {val: data.type, ack: true});
+			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {val: data.installed, ack: true});
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+	async setAreaSetup(id, area, data) {
+		try {
+			const areaId = parseInt(area.slice(-1));
+			await this.createStateAsync("Gateway " + id, "Setup_fans", "area" + areaId, {
+				"name": {
+					"en": "Function of the fan per area",
+					"de": "Funktion des Lüfters pro Bereich",
+					"ru": "Функция вентилятора на зону",
+					"pt": "Função do ventilador por área",
+					"nl": "Vertaling:",
+					"fr": "Fonction du ventilateur par zone",
+					"it": "Funzione del ventilatore per area",
+					"es": "Función del ventilador por área",
+					"pl": "Function of the fan per area (ang.)",
+					"uk": "Функції вентилятора на область",
+					"zh-cn": "B. 每一地区狂热的功能"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": true,
+				"states": {
+					"Supply and exhaust air":"Supply and exhaust air",
+					"Only supply air":"Only supply air",
+					"Only exhaust air":"Only exhaust air",
+				}
+			});
+			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".area" + areaId, {val: data, ack: true});
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+	async setDigitalInput(id, area, data) {
+		try {
+			const areaId = parseInt(area.slice(-1));
+			await this.createStateAsync("Gateway " + id, "Setup_inputDi", "area" + areaId + "_inputDi", {
+				"name": {
+					"en": "Allocation of a digital input signal to an area",
+					"de": "Zuordnung eines digitalen Eingangssignals zu einem Bereich",
+					"ru": "Распределение цифрового входного сигнала в зону",
+					"pt": "Alocação de um sinal de entrada digital para uma área",
+					"nl": "Vertaling:",
+					"fr": "Allocation d'un signal d'entrée numérique à une zone",
+					"it": "Distribuzione di un segnale di ingresso digitale in un'area",
+					"es": "Asignación de una señal de entrada digital a un área",
+					"pl": "Przydzielanie sygnału wejściowego do obszaru",
+					"uk": "Розміщення цифрового сигналу в область",
+					"zh-cn": "向一个地区分配数字投入信号"
+				},
+				"role": "state",
+				"type": "boolean",
+				"read": true,
+				"write": true,
+			});
+			await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {val: data, ack: true});
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+	async setDigitalOutput(id, area, data) {
+		try {
+			const areaId = parseInt(area.slice(-1));
+			this.log.info(id);
+			this.log.info(area);
+			this.log.info(JSON.stringify(data));
+
+			await this.createStateAsync("Gateway " + id, "Setup_outputDo", "area" + areaId + "_outputDo", {
+				"name": {
+					"en": "Allocation of a digital output signal from an area",
+					"de": "Zuordnung eines digitalen Ausgangssignals aus einem Bereich",
+					"ru": "Распределение цифрового выходного сигнала из области",
+					"pt": "Alocação de um sinal de saída digital de uma área",
+					"nl": "Vertaling:",
+					"fr": "Répartition d'un signal de sortie numérique depuis une zone",
+					"it": "Distribuzione di un segnale di uscita digitale da un'area",
+					"es": "Asignación de una señal de salida digital desde un área",
+					"pl": "Alokacja cyfrowego sygnału wyjściowego z obszaru",
+					"uk": "Розміщення цифрового вихідного сигналу з області",
+					"zh-cn": "从一个地区分配数字产出信号"
+				},
+				"role": "state",
+				"type": "boolean",
+				"read": true,
+				"write": true,
+			});
+			await this.setStateAsync("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {val: data, ack: true});
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
+
+
 }
 
 if (require.main !== module) {
