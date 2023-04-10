@@ -854,7 +854,7 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 	async setTelemetryData(id, TelemetryData) {
-		await this.createChannelAsync("Gateway " + id, "Telemetry", {
+		await this.createChannelAsync("Gateway " + id, "Info_Telemetry", {
 			"name": {
 				"en": "Telemetry",
 				"de": "Telemetrie",
@@ -869,7 +869,7 @@ class SecSmart extends utils.Adapter {
 				"zh-cn": "电话测量"
 			},
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "restFilterTime", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "restFilterTime", {
 			"name": {
 				"en": "Remaining filter run time in days",
 				"de": "Rest Filterlaufzeit in Tagen",
@@ -888,7 +888,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "CO2", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "CO2", {
 			"name": {
 				"en": "Actual sensor value of CO² in ppm",
 				"de": "Tatsächlicher Sensorwert von CO2 in ppm",
@@ -907,7 +907,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "humidity", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "humidity", {
 			"name": {
 				"en": "Actual sensor value of humidity in %",
 				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit in %",
@@ -926,7 +926,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "tempInside", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "tempInside", {
 			"name": {
 				"en": "Actual sensor value of room temperature in °C",
 				"de": "Tatsächlicher Sensorwert der Raumtemperatur in °C",
@@ -945,7 +945,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "tempOutside", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "tempOutside", {
 			"name": {
 				"en": "Actual sensor value of outside temperature in °C",
 				"de": "Ist-Sensorwert der Außentemperatur in °C",
@@ -964,7 +964,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Telemetry", "uptime", {
+		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "uptime", {
 			"name": {
 				"en": "Uptime of the SEC Smart system",
 				"de": "Bisherige Laufzeit des SEC Smart Systems",
@@ -983,11 +983,11 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
 		this.log.info(TelemetryData.uptime);
 		const uptimeSplit = TelemetryData.uptime.split(".");
 		const uptimeTimeSplit = uptimeSplit[2].split(":");
@@ -998,7 +998,7 @@ class SecSmart extends utils.Adapter {
 		const uptimeMinute = (uptimeTimeSplit[1] > 1) ? " Minuten " : " Minute ";
 		uptimeConverted = uptimeSplit[0] + uptimeYear + uptimeSplit[1] + uptimeDay + uptimeTimeSplit[0] + uptimeHour + uptimeTimeSplit[1] + uptimeMinute;
 		this.log.info(uptimeConverted);
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
 	}
 
 	async setSetup(id) {
