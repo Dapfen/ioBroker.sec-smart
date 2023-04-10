@@ -138,8 +138,7 @@ class SecSmart extends utils.Adapter {
 				}
 			});
 		}
-
-		if (splitState[3].slice(0,4) == "area" && splitState[4].slice(0,5) == "timer" && state.ack === false) {
+		if (splitState[3].slice(0,13) == "Settings_area" && splitState[4].slice(0,5) == "timer" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
 					this.log.error(JSON.stringify(err));
@@ -154,7 +153,7 @@ class SecSmart extends utils.Adapter {
 			});
 		}
 
-		if (splitState[3] == "Settings" && state.ack === false) {
+		if (splitState[3] == "Settings_General" && state.ack === false) {
 			this.getState(splitState[2] + ".Info.id",(err, deviceState) => {
 				if (err) {
 					this.log.error(JSON.stringify(err));
@@ -181,8 +180,8 @@ class SecSmart extends utils.Adapter {
 	async changeSettings(id, changedState, stateVal){
 		if (changedState == "FilterResetIntervall" || changedState == "FilterRemainingTimeReset"){
 			try {
-				const filterResetIntervall = await this.getStateAsync("Gateway " + id + ".Settings.FilterResetIntervall");
-				const filterRemainingTimeReset = await this.getStateAsync("Gateway " + id + ".Settings.FilterRemainingTimeReset");
+				const filterResetIntervall = await this.getStateAsync("Gateway " + id + ".Settings_General.FilterResetIntervall");
+				const filterRemainingTimeReset = await this.getStateAsync("Gateway " + id + ".Settings_General.FilterRemainingTimeReset");
 				if(changedState == "FilterResetIntervall") {
 					switch (true){
 						case (Number(filterResetIntervall.val) < 90):
@@ -208,7 +207,7 @@ class SecSmart extends utils.Adapter {
 				} else {
 					newValue = false;
 				}
-				this.setState("Gateway "+ id + ".Settings." + changedState, {val: newValue, ack: true});
+				this.setState("Gateway "+ id + ".Settings_General." + changedState, {val: newValue, ack: true});
 				return true;
 			} catch (err) {
 				this.log.error(err);
@@ -216,8 +215,8 @@ class SecSmart extends utils.Adapter {
 		}
 		if (changedState == "Humidity" || changedState == "CO2"){
 			try {
-				const newHumidity = await this.getStateAsync("Gateway " + id + ".Settings.Humidity");
-				const newCO2 = await this.getStateAsync("Gateway " + id + ".Settings.CO2");
+				const newHumidity = await this.getStateAsync("Gateway " + id + ".Settings_General.Humidity");
+				const newCO2 = await this.getStateAsync("Gateway " + id + ".Settings_General.CO2");
 				const setCO2_HumidityJson = {
 					"thresholds":{
 						"humidity": newHumidity.val,
@@ -225,7 +224,7 @@ class SecSmart extends utils.Adapter {
 					}
 				};
 				this.secApiClient.put("/devices/" + id + "/settings/thresholds", setCO2_HumidityJson);
-				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				this.setState("Gateway "+ id + ".Settings_General." + changedState, {val: stateVal, ack: true});
 				return true;
 			} catch (err) {
 				this.log.error(err);
@@ -233,7 +232,7 @@ class SecSmart extends utils.Adapter {
 		}
 		if (changedState == "SleepTime"){
 			try {
-				const newSleepTime = await this.getStateAsync("Gateway " + id + ".Settings.SleepTime");
+				const newSleepTime = await this.getStateAsync("Gateway " + id + ".Settings_General.SleepTime");
 				switch (true){
 					case (Number(newSleepTime.val) < 10):
 						stateVal = 10;
@@ -248,7 +247,7 @@ class SecSmart extends utils.Adapter {
 					"sleepTime": newSleepTime.val
 				};
 				this.secApiClient.put("/devices/" + id + "/settings/sleep-time", setSleepTimeJson);
-				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				this.setState("Gateway "+ id + ".Settings_General." + changedState, {val: stateVal, ack: true});
 				return true;
 			} catch (err) {
 				this.log.error(err);
@@ -256,12 +255,12 @@ class SecSmart extends utils.Adapter {
 		}
 		if (changedState == "SummerMode"){
 			try {
-				const newSummerMode = await this.getStateAsync("Gateway " + id + ".Settings.SummerMode");
+				const newSummerMode = await this.getStateAsync("Gateway " + id + ".Settings_General.SummerMode");
 				const setSummerModeJson = {
 					"summermode": newSummerMode.val
 				};
 				this.secApiClient.put("/devices/" + id + "/settings/summermode", setSummerModeJson);
-				this.setState("Gateway "+ id + ".Settings." + changedState, {val: stateVal, ack: true});
+				this.setState("Gateway "+ id + ".Settings_General." + changedState, {val: stateVal, ack: true});
 				return true;
 			} catch (err) {
 				this.log.error(err);
@@ -291,9 +290,10 @@ class SecSmart extends utils.Adapter {
 	async changeAreaTimers(id, area, changedState, stateVal) {
 		try {
 			const areaId = parseInt(area.slice(-1));
+			const areaNameApi = area.slice(-5);
 			const areasInfoResponse = await this.secApiClient.get("/devices/" + id + "/areas");
 			if (areasInfoResponse.status === 200) {
-				const apiTimers = areasInfoResponse.data[area]["timers"];
+				const apiTimers = areasInfoResponse.data[areaNameApi]["timers"];
 				let newTimerJSON = '{"areaid":'+ areaId + ',"timers":{';
 				let timerCount = 1;
 				for (const key in apiTimers) {
@@ -323,7 +323,7 @@ class SecSmart extends utils.Adapter {
 				newTimerJSON = newTimerJSON + "}}";
 				newTimerJSON = JSON.parse(newTimerJSON);
 				this.secApiClient.put("/devices/" + id + "/areas/timeprogram", newTimerJSON);
-				this.setState("Gateway "+ id + ".area" + areaId + "." + changedState, {val: stateVal, ack: true});
+				this.setState("Gateway "+ id + ".Settings_area" + areaId + "." + changedState, {val: stateVal, ack: true});
 				return true;
 			}
 			else {
@@ -492,7 +492,7 @@ class SecSmart extends utils.Adapter {
 	
 	// Add/update datapoints in areas
 	async setArea(id, area, data) {
-		await this.createChannelAsync("Gateway " + id, area, {
+		await this.createChannelAsync("Gateway " + id, "Settings_" + area, {
 			name:{
 				"en": "Area data",
 				"de": "Bereichsdaten",
@@ -506,7 +506,7 @@ class SecSmart extends utils.Adapter {
 				"uk": "Об'єм даних",
 				"zh-cn": "区域数据"
 			}});
-		await this.createStateAsync("Gateway " + id, area, "label", {
+		await this.createStateAsync("Gateway " + id, "Settings_" + area, "label", {
 			"name": {
 				"en": "Area label",
 				"de": "Bereichsbezeichnung",
@@ -525,7 +525,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, area, "mode", {
+		await this.createStateAsync("Gateway " + id, "Settings_" + area, "mode", {
 			"name": {
 				"en": "Area mode",
 				"de": "Bereichsmodus",
@@ -559,8 +559,8 @@ class SecSmart extends utils.Adapter {
 				"INACTIVE":"INACTIVE"
 			}
 		});
-		await this.setStateAsync("Gateway " + id + "." + area + ".label", {val: data.label, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + area + ".mode", {val: data.mode, ack: true});
+		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + ".label", {val: data.label, ack: true});
+		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + ".mode", {val: data.mode, ack: true});
 
 		for(const i in data.timers)
 			this.setTimers(id, area, i, data.timers[i]);
@@ -568,7 +568,7 @@ class SecSmart extends utils.Adapter {
 
 	// Add/Update datapoints timers in areas
 	async setTimers(id, area, timer, data) {
-		await this.createStateAsync("Gateway " + id, area, timer + "_active", {
+		await this.createStateAsync("Gateway " + id,  "Settings_" + area, timer + "_active", {
 			"name": {
 				"en": "Timer status",
 				"de": "Timing-Status",
@@ -587,7 +587,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, area, timer + "_mode", {
+		await this.createStateAsync("Gateway " + id, "Settings_" + area, timer + "_mode", {
 			"name": {
 				"en": "Timer mode",
 				"de": "Timer-Modus",
@@ -621,7 +621,7 @@ class SecSmart extends utils.Adapter {
 				"INACTIVE":"INACTIVE"
 			}
 		});
-		await this.createStateAsync("Gateway " + id, area, timer + "_time", {
+		await this.createStateAsync("Gateway " + id, "Settings_" + area, timer + "_time", {
 			"name": {
 				"en": "Timer status",
 				"de": "Timing-Status",
@@ -641,9 +641,9 @@ class SecSmart extends utils.Adapter {
 			"write": true
 		});
 
-		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_active", {val: data.active, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_mode", {val: data.mode, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + area + "." + timer +"_time", {val: data.time, ack: true});
+		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_active", {val: data.active, ack: true});
+		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_mode", {val: data.mode, ack: true});
+		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_time", {val: data.time, ack: true});
 	}
 
 
@@ -659,7 +659,7 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 	async setSettingsData(id, SettingsData) {
-		await this.createChannelAsync("Gateway " + id, "Settings", {
+		await this.createChannelAsync("Gateway " + id, "Settings_General", {
 			"name": {
 				"en": "Settings",
 				"de": "Einstellungen",
@@ -674,7 +674,7 @@ class SecSmart extends utils.Adapter {
 				"zh-cn": "确定"
 			},
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "FilterResetIntervall", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "FilterResetIntervall", {
 			"name": {
 				"en": "Filter change intervall",
 				"de": "Filterwechselintervall",
@@ -696,7 +696,7 @@ class SecSmart extends utils.Adapter {
 			"step": 10,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "FilterRemainingTimeReset", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "FilterRemainingTimeReset", {
 			"name": {
 				"en": "reset filter remaining time",
 				"de": "Restlaufzeit Filter zurücksetzen",
@@ -715,7 +715,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "CO2", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "CO2", {
 			"name": {
 				"en": "Actual sensor value of CO² in ppm.",
 				"de": "Tatsächlicher Sensorwert von CO2 in ppm.",
@@ -734,7 +734,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "Humidity", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "Humidity", {
 			"name": {
 				"en": "Actual sensor value of humidity",
 				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit",
@@ -753,7 +753,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "SleepTime", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "SleepTime", {
 			"name": {
 				"en": "Sleep Time",
 				"de": "Zeit für Schlafmodus",
@@ -774,7 +774,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": true
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "DeviceTime", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "DeviceTime", {
 			"name": {
 				"en": "Device Time",
 				"de": "Zeit des Geräts",
@@ -793,7 +793,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "DeviceDate", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "DeviceDate", {
 			"name": {
 				"en": "Device Date",
 				"de": "Datum des Gerätes",
@@ -812,7 +812,7 @@ class SecSmart extends utils.Adapter {
 			"read": true,
 			"write": false
 		});
-		await this.createStateAsync("Gateway " + id, "Settings", "SummerMode", {
+		await this.createStateAsync("Gateway " + id, "Settings_General", "SummerMode", {
 			"name": {
 				"en": "Sommer modus",
 				"de": "Sommermodus",
@@ -832,15 +832,15 @@ class SecSmart extends utils.Adapter {
 			"write": true
 		});
 		const setResetFalse = false;
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
 		//funktioniert noch nicht set sommermode
-		await this.setStateAsync("Gateway " + id + ".Settings" + ".SummerMode", {val: SettingsData.summermode, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".SummerMode", {val: SettingsData.summermode, ack: true});
 	}
 	// Add/Update telemetry data
 	async setTelemetry(id) {
@@ -988,7 +988,17 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".uptime", {val: TelemetryData.uptime, ack: true});
+		this.log.info(TelemetryData.uptime);
+		const uptimeSplit = TelemetryData.uptime.split(".");
+		const uptimeTimeSplit = uptimeSplit[2].split(":");
+		let uptimeConverted = uptimeSplit[0];
+		const uptimeYear = (uptimeSplit[0] > 1) ? " Jahre " : " Jahr ";
+		const uptimeDay = (uptimeSplit[1] > 1) ? " Tage " : " Tag ";
+		const uptimeHour = (uptimeTimeSplit[0] > 1) ? " Stunden " : " Stunde ";
+		const uptimeMinute = (uptimeTimeSplit[1] > 1) ? " Minuten " : " Minute ";
+		uptimeConverted = uptimeSplit[0] + uptimeYear + uptimeSplit[1] + uptimeDay + uptimeTimeSplit[0] + uptimeHour + uptimeTimeSplit[1] + uptimeMinute;
+		this.log.info(uptimeConverted);
+		await this.setStateAsync("Gateway " + id + ".Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
 	}
 
 	async setSetup(id) {
@@ -1018,6 +1028,7 @@ class SecSmart extends utils.Adapter {
 				"zh-cn": "恢复化解装置的装置分包。."
 			},
 		});
+
 		const systemInfo = setupData.systems;
 		for(const i in systemInfo) {
 			this.setSystemsSetup(id, i, systemInfo[i]);
@@ -1088,6 +1099,7 @@ class SecSmart extends utils.Adapter {
 			}
 		});
 		await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".function", {val: setupData.inputDi.function, ack: true});
+
 		const areaDigitalInput = setupData.inputDi.areas;
 		for(const i in areaDigitalInput) {
 			this.setDigitalInput(id, i, areaDigitalInput[i]);
@@ -1149,6 +1161,298 @@ class SecSmart extends utils.Adapter {
 		const areaDigitalOutput = setupData.outputDo.areas;
 		for(const i in areaDigitalOutput) {
 			this.setDigitalOutput(id, i, areaDigitalOutput[i]);
+		}
+
+		await this.createChannelAsync("Gateway " + id, "Setup_inputAi", {
+			"name": {
+				"en": "Set up the configuration for the analog input.",
+				"de": "Richten Sie die Konfiguration für den analogen Eingang ein.",
+				"ru": "Настройте конфигурацию для аналогового входа.",
+				"pt": "Configure a configuração para a entrada analógica.",
+				"nl": "Zet de configuratie op voor de analog input.",
+				"fr": "Configuration de l'entrée analogique.",
+				"it": "Impostare la configurazione per l'ingresso analogico.",
+				"es": "Configurar la configuración para la entrada analógica.",
+				"pl": "Ustanowić konfigurację dla sygnału analogowego.",
+				"uk": "Встановити конфігурацію для аналогового введення.",
+				"zh-cn": "设立类似投入的组合。."
+			},
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "function", {
+			"name": {
+				"en": "Response to signal via digital output",
+				"de": "Antwort auf das Signal über den digitalen Ausgang",
+				"ru": "Ответ на сигнал через цифровой выход",
+				"pt": "Resposta ao sinal via saída digital",
+				"nl": "Vertaling:",
+				"fr": "Réponse au signal via la sortie numérique",
+				"it": "Risposta al segnale tramite uscita digitale",
+				"es": "Respuesta a la señal mediante salida digital",
+				"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
+				"uk": "Відповідь на сигнал через цифровий вихід",
+				"zh-cn": "通过数字产出对信号的反应"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": true,
+			"states": {
+				"None":"None",
+				"Fan stage":"Fan stage", 
+				"Humidity":"Humidity", 
+				"CO2":"CO2", 
+				"Ti":"Ti", 
+				"Ta":"Ta"
+			}
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "functionType", {
+			"name": {
+				"en": "function type",
+				"de": "Funktionart",
+				"ru": "тип функции",
+				"pt": "tipo de função",
+				"nl": "functionerend type",
+				"fr": "type de fonction",
+				"it": "tipo di funzione",
+				"es": "tipo de función",
+				"pl": "typename",
+				"uk": "тип функції",
+				"zh-cn": "功能类型"
+			},
+			"role": "text",
+			"type": "string",
+			"read": true,
+			"write": true,
+			"states": {
+				"0-10 V":"0-10 V",
+				"4-20 mA":"4-20 mA"
+			}
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_x_lower", {
+			"name": {
+				"en": "Analog input value in % for the lower setpoint",
+				"de": "Analoger Eingangswert in % für den unteren Sollwert",
+				"ru": "Аналоговая входная стоимость в % для нижней точки",
+				"pt": "Valor de entrada analógico em % para o setpoint inferior",
+				"nl": "Analog input waarde in % voor de lagere instelling",
+				"fr": "Valeur d'entrée analogique en % pour le paramètre inférieur",
+				"it": "Valore di ingresso analogico in % per il setpoint inferiore",
+				"es": "Valor de entrada analógico en % para el punto inferior",
+				"pl": "Analog wejściowy w % dla niższych punktów końcowych",
+				"uk": "Значення аналогового введення в % для нижньої точки",
+				"zh-cn": "低定点投入值"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 0,
+			"max": 50,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_x_upper", {
+			"name": {
+				"en": "Analog input value in % for the upper setpoint",
+				"de": "Analoger Eingangswert in % für den oberen Sollwert",
+				"ru": "Аналоговая входная стоимость в % для верхней точки",
+				"pt": "Valor de entrada analógico em % para o setpoint superior",
+				"nl": "Analog input waarde in % voor de upper setpoint",
+				"fr": "Valeur d'entrée analogique en % pour le paramètre supérieur",
+				"it": "Valore di ingresso analogico in % per il setpoint superiore",
+				"es": "Valor de entrada analógico en % para el punto superior",
+				"pl": "Analog wejściowy % dla górnego punktu startowego",
+				"uk": "Значення аналогового введення в % для верхньої точки",
+				"zh-cn": "高点投入值"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 50,
+			"max": 100,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_lower", {
+			"name": {
+				"en": "Fanlevel to apply at lower setpoint",
+				"de": "Fanlevel zur Anwendung im unteren Sollwert",
+				"ru": "Fanlevel для подачи заявки на более низкую точку",
+				"pt": "Nível de ventilador para aplicar em setpoint inferior",
+				"nl": "Fanlevel om te solliciteren op lagere set",
+				"fr": "Fanlevel to apply at lower setpoint",
+				"it": "Livello di ventilatore da applicare al punto più basso",
+				"es": "Nivel de abanico para aplicar en el punto inferior",
+				"pl": "Fanpozycja na niższym zbiorze",
+				"uk": "Вентилятор для застосування в нижньому точках",
+				"zh-cn": "低级申请"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 0,
+			"max": 3,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_upper", {
+			"name": {
+				"en": "Fanlevel to apply at upper setpoint",
+				"de": "Fanlevel zur Anwendung im oberen Sollwert",
+				"ru": "Fanlevel для подачи заявки на верхней точке",
+				"pt": "Nível de ventilador para aplicar no setpoint superior",
+				"nl": "Fanlevel om zich te melden bij Upper setpoint",
+				"fr": "Fanlevel to apply at upper setpoint",
+				"it": "Livello di ventilatore da applicare al punto superiore",
+				"es": "Nivel de abanico para aplicar en el punto superior",
+				"pl": "Fanpozycja na górnym zbiorze",
+				"uk": "Вентилятор для застосування в верхній точці",
+				"zh-cn": "申请上级"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 3,
+			"max": 6,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_lower", {
+			"name": {
+				"en": "Humidity value in % for humidity regulation mode to apply at lower setpoint",
+				"de": "Luftfeuchtigkeitswert in % für Feuchtigkeitsregulierungsmodus auf niedrigerem Sollwert",
+				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на более низкой точке",
+				"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar-se no ponto de ajuste inferior",
+				"nl": "Humidity waarde in % voor nederigheidsregeling om te solliciteren op lagere set",
+				"fr": "Valeur d ' humidité en % pour le mode de régulation de l ' humidité à appliquer à un point inférieur",
+				"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto più basso",
+				"es": "Valor de humedad en % para el modo de regulación de humedad para aplicar en el punto inferior",
+				"pl": "Wartość w trybie wilgotności w trybie regulacji wilgotności w temperaturze % w trybie regulacji wilgotności do stosowania w niższych wartościach ustawodawczych",
+				"uk": "Значення вологості в % для режиму регулювання вологості для застосування при нижчій точковій точці",
+				"zh-cn": "湿度管理模式的50%的湿度"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 0,
+			"max": 50,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_upper", {
+			"name": {
+				"en": "Humidity value in % for humidity regulation mode to apply at upper setpoint",
+				"de": "Feuchtewert in % für Feuchteregelungsart, die sich auf den oberen Sollwert bezieht",
+				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на верхней точке",
+				"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar no ponto de ajuste superior",
+				"nl": "Humiditeitswaarde in % voor nederigheidsregeling om toe te passen bij het opstellen van",
+				"fr": "Valeur de l ' humidité en % pour le mode de régulation de l ' humidité à appliquer au niveau supérieur",
+				"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto superiore",
+				"es": "Valor de humedad en % para el modo regulación de humedad para aplicar en el punto superior",
+				"pl": "Wartość w % dla regulacji wilgotności w trybie regulacji wilgotności dostosowuje się w górnym punkcie setpoint",
+				"uk": "Значення вологості в % для режиму регулювання вологості наносити на верхню точку",
+				"zh-cn": "湿度管理模式的50%的湿度"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 50,
+			"max": 100,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_lower", {
+			"name": {
+				"en": "CO² value in ppm for CO² regulation mode to apply at lower setpoint",
+				"de": "CO2-Wert in ppm für CO2-Regelungsmodus auf niedrigeren Sollwert",
+				"ru": "Значение CO2 в ppm для режима регулирования CO2 для применения на более низкой точке",
+				"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar em setpoint inferior",
+				"nl": "CO2 waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op lagere set",
+				"fr": "Valeur CO2 en ppm pour le mode de régulation CO2 à appliquer à un point de réglage inférieur",
+				"it": "Valore di CO2 in ppm per la modalità di regolazione CO2 da applicare al punto più basso",
+				"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en punto inferior",
+				"pl": "Wartość CO2 w trybie regulacji CO2",
+				"uk": "CO2 значення в ppm для режиму регулювання CO2 на нижню точку",
+				"zh-cn": "CO2 条例模式ppm中的CO2价值"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 0,
+			"max": 1500,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_upper", {
+			"name": {
+				"en": "CO² value in ppm for CO² regulation mode to apply at upper setpoint",
+				"de": "CO2 -Wert in ppm für CO2 -Regelungsmodus für den oberen Sollwert",
+				"ru": "Значение CO2 в ppm для режима регулирования CO2, чтобы применить на верхней точке",
+				"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar no setpoint superior",
+				"nl": "CO2-waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op het hoogste punt",
+				"fr": "Valeur CO2 en ppm pour le mode de régulation du CO2 à appliquer au point de réglage supérieur",
+				"it": "Valore di CO2 in ppm per la modalità di regolazione di CO2 da applicare al punto più alto",
+				"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en el punto superior",
+				"pl": "Wartość CO2 w trybie regulacji CO2",
+				"uk": "CO2 значення в ppm для режиму регулювання CO2, щоб застосувати в верхній частині",
+				"zh-cn": "CO2 公司2条例模式ppm中的CO2价值"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 1500,
+			"max": 5000,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_lower", {
+			"name": {
+				"en": "Lower setpoint in °C for linear curve when used for an analog temperature sensor",
+				"de": "Unterer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
+				"ru": "Более низкая установка в °C для линейной кривой при использовании для аналогового датчика температуры",
+				"pt": "Setpoint inferior em °C para curva linear quando usado para um sensor de temperatura analógico",
+				"nl": "Lower setpoint in therci for lineaire curve wanneer gebruikt voor een analogische temperatuursensor",
+				"fr": "Réglage inférieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
+				"it": "Setpoint inferiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
+				"es": "Punto de ajuste inferior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
+				"pl": "Dolny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
+				"uk": "Нижня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
+				"zh-cn": "使用模拟温度传感器的蒸气曲线的°C"
+			},
+			"role": "text",
+			"type": "number",
+			"min": -50,
+			"max": 0,
+			"read": true,
+			"write": true,
+		});
+		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_upper", {
+			"name": {
+				"en": "Upper setpoint in °C for linear curve when used for an analog temperature sensor",
+				"de": "Oberer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
+				"ru": "Верхняя установка в °C для линейной кривой при использовании для аналогового датчика температуры",
+				"pt": "Ponto de ajuste superior em °C para curva linear quando usado para um sensor de temperatura analógico",
+				"nl": "Upper setpoint in theologie voor lineaire curve als gebruikt voor een analogische temperatuursensor",
+				"fr": "Réglage supérieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
+				"it": "Setpoint superiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
+				"es": "Punto superior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
+				"pl": "Górny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
+				"uk": "Верхня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
+				"zh-cn": "使用模拟温度传感器的线曲线上级点"
+			},
+			"role": "text",
+			"type": "number",
+			"min": 0,
+			"max": 50,
+			"read": true,
+			"write": true,
+		});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".function", {val: setupData.inputAi.function, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".functionType", {val: setupData.inputAi.functionType, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_lower", {val: setupData.inputAi.curveParameters.x.lower, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_upper", {val: setupData.inputAi.curveParameters.x.upper, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_lower", {val: setupData.inputAi.curveParameters.yFanlevel.lower, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_upper", {val: setupData.inputAi.curveParameters.yFanlevel.upper, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_lower", {val: setupData.inputAi.curveParameters.yHumidity.lower, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_upper", {val: setupData.inputAi.curveParameters.yHumidity.upper, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_lower", {val: setupData.inputAi.curveParameters.yCo2.lower, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_upper", {val: setupData.inputAi.curveParameters.yCo2.upper, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_lower", {val: setupData.inputAi.curveParameters.yTemp.lower, ack: true});
+		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_upper", {val: setupData.inputAi.curveParameters.yTemp.upper, ack: true});
+		const areaAnalogInput = setupData.outputDo.areas;
+		for(const i in areaAnalogInput) {
+			this.setAnalogInput(id, i, areaAnalogInput[i]);
 		}
 	}
 
@@ -1275,10 +1579,6 @@ class SecSmart extends utils.Adapter {
 	async setDigitalOutput(id, area, data) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			this.log.info(id);
-			this.log.info(area);
-			this.log.info(JSON.stringify(data));
-
 			await this.createStateAsync("Gateway " + id, "Setup_outputDo", "area" + areaId + "_outputDo", {
 				"name": {
 					"en": "Allocation of a digital output signal from an area",
@@ -1303,7 +1603,33 @@ class SecSmart extends utils.Adapter {
 			this.log.error(err);
 		}
 	}
-
+	async setAnalogInput(id, area, data) {
+		try {
+			const areaId = parseInt(area.slice(-1));
+			await this.createStateAsync("Gateway " + id, "Setup_inputAi", "area" + areaId + "_inputAi", {
+				"name": {
+					"en": "Allocation of a analog input signal to an area",
+					"de": "Zuordnung eines analogen Eingangssignals zu einem Bereich",
+					"ru": "Распределение аналогового входного сигнала в зону",
+					"pt": "Alocação de um sinal de entrada analógico para uma área",
+					"nl": "Vertaling:",
+					"fr": "Allocation d'un signal d'entrée analogique à une zone",
+					"it": "Distribuzione di un segnale di ingresso analogico a un'area",
+					"es": "Asignación de una señal de entrada analógica a una zona",
+					"pl": "Przydzielanie analogowego sygnału wejściowego do obszaru",
+					"uk": "Розподіл аналогових вхідних сигналів на область",
+					"zh-cn": "向一个地区分配类似的投入信号"
+				},
+				"role": "state",
+				"type": "boolean",
+				"read": true,
+				"write": true,
+			});
+			await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {val: data, ack: true});
+		} catch (err) {
+			this.log.error(err);
+		}
+	}
 
 }
 
