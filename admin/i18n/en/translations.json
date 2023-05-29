@@ -3,5 +3,7 @@
 	"API URL": "API URL",
 	"Fill in the SEC-Smart API URL": "Fill in the SEC-Smart API URL",
 	"API Token": "API Token",
-	"Fill in your API Token from your SEC-Smart Gateway": "Fill in your API Token from your SEC-Smart Gateway"
+	"Fill in your API Token from your SEC-Smart Gateway": "Fill in your API Token from your SEC-Smart Gateway",
+	"API Request Intervall in seconds": "API Request Intervall in seconds",
+	"Fill in the request intervall for the API": "Fill in the request intervall for the API"
 }

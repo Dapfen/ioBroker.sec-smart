@@ -22,6 +22,15 @@
 					"lg": 6,
 					"label": "API Token",
 					"help": "Fill in your API Token from your SEC-Smart Gateway"	
+				},
+				"apiRequestIntervall": {
+					"newLine": true,
+					"type": "text",
+					"sm": 12,
+					"md": 6,
+					"lg": 6,
+					"label": "API Request Intervall in seconds",
+					"help": "Fill in the request intervall for the API"	
 				}
 			}
 		}

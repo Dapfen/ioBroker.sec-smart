@@ -84,6 +84,13 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
+	/*
+	async poll (){
+		this.setDevices();
+		setTimeout(poll(),this.config.apiRequestIntervall)
+	}
+	*/
+
 	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
 	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
 	// /**
@@ -489,7 +496,6 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 
-	
 	// Add/update datapoints in areas
 	async setArea(id, area, data) {
 		await this.createChannelAsync("Gateway " + id, "Settings_" + area, {
@@ -1069,7 +1075,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "string",
 			"read": true,
-			"write": true,
+			"write": false,
 			"states": {
 				"None":"None",
 				"Set fan stage 0":"Set fan stage 0",
@@ -1136,7 +1142,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "string",
 			"read": true,
-			"write": true,
+			"write": false,
 			"states": {
 				"None":"None",
 				"Fan stage 0 active":"Fan stage 0 active",
@@ -1195,13 +1201,13 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "string",
 			"read": true,
-			"write": true,
+			"write": false,
 			"states": {
 				"None":"None",
-				"Fan stage":"Fan stage", 
-				"Humidity":"Humidity", 
-				"CO2":"CO2", 
-				"Ti":"Ti", 
+				"Fan stage":"Fan stage",
+				"Humidity":"Humidity",
+				"CO2":"CO2",
+				"Ti":"Ti",
 				"Ta":"Ta"
 			}
 		});
@@ -1222,7 +1228,7 @@ class SecSmart extends utils.Adapter {
 			"role": "text",
 			"type": "string",
 			"read": true,
-			"write": true,
+			"write": false,
 			"states": {
 				"0-10 V":"0-10 V",
 				"4-20 mA":"4-20 mA"
@@ -1247,7 +1253,7 @@ class SecSmart extends utils.Adapter {
 			"min": 0,
 			"max": 50,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_x_upper", {
 			"name": {
@@ -1268,7 +1274,7 @@ class SecSmart extends utils.Adapter {
 			"min": 50,
 			"max": 100,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_lower", {
 			"name": {
@@ -1289,7 +1295,7 @@ class SecSmart extends utils.Adapter {
 			"min": 0,
 			"max": 3,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_upper", {
 			"name": {
@@ -1310,7 +1316,7 @@ class SecSmart extends utils.Adapter {
 			"min": 3,
 			"max": 6,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_lower", {
 			"name": {
@@ -1331,7 +1337,7 @@ class SecSmart extends utils.Adapter {
 			"min": 0,
 			"max": 50,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_upper", {
 			"name": {
@@ -1352,7 +1358,7 @@ class SecSmart extends utils.Adapter {
 			"min": 50,
 			"max": 100,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_lower", {
 			"name": {
@@ -1373,7 +1379,7 @@ class SecSmart extends utils.Adapter {
 			"min": 0,
 			"max": 1500,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_upper", {
 			"name": {
@@ -1394,7 +1400,7 @@ class SecSmart extends utils.Adapter {
 			"min": 1500,
 			"max": 5000,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_lower", {
 			"name": {
@@ -1415,7 +1421,7 @@ class SecSmart extends utils.Adapter {
 			"min": -50,
 			"max": 0,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_upper", {
 			"name": {
@@ -1436,7 +1442,7 @@ class SecSmart extends utils.Adapter {
 			"min": 0,
 			"max": 50,
 			"read": true,
-			"write": true,
+			"write": false,
 		});
 		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".function", {val: setupData.inputAi.function, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".functionType", {val: setupData.inputAi.functionType, ack: true});
@@ -1476,7 +1482,7 @@ class SecSmart extends utils.Adapter {
 				"role": "text",
 				"type": "string",
 				"read": true,
-				"write": true,
+				"write": false,
 				"states": {
 					"None":"None",
 					"SEVi160":"SEVi160",
@@ -1509,7 +1515,7 @@ class SecSmart extends utils.Adapter {
 				"role": "text",
 				"type": "string",
 				"read": true,
-				"write": true,
+				"write": false,
 			});
 			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {val: data.type, ack: true});
 			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {val: data.installed, ack: true});
@@ -1537,7 +1543,7 @@ class SecSmart extends utils.Adapter {
 				"role": "text",
 				"type": "string",
 				"read": true,
-				"write": true,
+				"write": tfalse,
 				"states": {
 					"Supply and exhaust air":"Supply and exhaust air",
 					"Only supply air":"Only supply air",
@@ -1569,7 +1575,7 @@ class SecSmart extends utils.Adapter {
 				"role": "state",
 				"type": "boolean",
 				"read": true,
-				"write": true,
+				"write": false,
 			});
 			await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {val: data, ack: true});
 		} catch (err) {
@@ -1596,7 +1602,7 @@ class SecSmart extends utils.Adapter {
 				"role": "state",
 				"type": "boolean",
 				"read": true,
-				"write": true,
+				"write": false,
 			});
 			await this.setStateAsync("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {val: data, ack: true});
 		} catch (err) {
@@ -1623,7 +1629,7 @@ class SecSmart extends utils.Adapter {
 				"role": "state",
 				"type": "boolean",
 				"read": true,
-				"write": true,
+				"write": false,
 			});
 			await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {val: data, ack: true});
 		} catch (err) {
