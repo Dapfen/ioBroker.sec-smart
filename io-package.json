@@ -17,20 +17,19 @@
                 "uk": "початковий випуск"
             }
         },
-        "title": "SEC Smart",
         "titleLang": {
-            "en": "SEC Smart",
-            "de": "SEC Smart",
-            "ru": "ТРЦ Смарт",
-            "pt": "SEC Inteligente",
-            "nl": "SEC slim",
-            "fr": "SEC intelligent",
-            "it": "SEC intelligente",
-            "es": "SEC inteligente",
-            "pl": "Inteligentny SEC",
-            "zh-cn": "秒智能",
-            "uk": "ТРЦ Смарт"
-        },
+            "en": "Integrate the SEC Smart Gateway from SEVentilation",
+            "de": "Integrieren Sie das SEC Smart Gateway von SEVentilation",
+            "ru": "Интеграция SEC Smart Gateway от SEVentilation",
+            "pt": "Integrar o SEC Smart Gateway da SEVentilation",
+            "nl": "Integreren de SEC Smart Gateway van SEVentil",
+            "fr": "Intégrer la passerelle intelligente SEC de SEVentilation",
+            "it": "Integrare il SEC Smart Gateway da SEVentilation",
+            "es": "Integrar la pasarela inteligente SEC de SEVentilation",
+            "pl": "Integracja SEC Smart Gateway z SEVentilation (ang.)",
+            "uk": "Інтеграція SEC Smart Gateway від SEVentilation",
+            "zh-cn": "将ECSmart Gateway从SEVentilation 综合起来"
+          },
         "desc": {
             "en": "Integrate the SEC Smart Gateway",
             "de": "Integrieren Sie das SEC Smart Gateway",
