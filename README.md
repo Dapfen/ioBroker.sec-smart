@@ -12,7 +12,7 @@
 
 ## sec-smart adapter for ioBroker
 
-Integrate the SEC Smart Gateway
+Integrate the SEC Smart Gateway from SEVentilation https://www.dezentrale-lueftung.com/
 
 ## Developer manual
 This section is intended for the developer. It can be deleted later.
