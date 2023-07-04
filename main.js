@@ -43,6 +43,8 @@ class SecSmart extends utils.Adapter {
 		// Reset the connection indicator during startup
 		this.subscribeStates("*");
 		this.setState("info.connection", false, true);
+		this.updateInterval = null;
+		const updateIntervalTime = this.config.apiRequestIntervall;
 
 		if (!this.config.apiUrl) {
 			this.log.error("API URL is empty - please check instance configuration");
@@ -62,8 +64,11 @@ class SecSmart extends utils.Adapter {
 				responseEncoding: "utf8"
 			});
 		}
-
 		this.setDevices();
+		this.updateInterval = setInterval(async () => {
+			await this.setDevices();
+			this.log.info("Updated");
+		}, updateIntervalTime * 1000);
 	}
 
 	/**
@@ -77,19 +82,12 @@ class SecSmart extends utils.Adapter {
 			// clearTimeout(timeout2);
 			// ...
 			// clearInterval(interval1);
-
+			this.updateInterval && clearInterval(this.updateInterval);
 			callback();
 		} catch (e) {
 			callback();
 		}
 	}
-
-	/*
-	async poll (){
-		this.setDevices();
-		setTimeout(poll(),this.config.apiRequestIntervall)
-	}
-	*/
 
 	// If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
 	// You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
@@ -994,7 +992,6 @@ class SecSmart extends utils.Adapter {
 		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
 		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
-		this.log.info(TelemetryData.uptime);
 		const uptimeSplit = TelemetryData.uptime.split(".");
 		const uptimeTimeSplit = uptimeSplit[2].split(":");
 		let uptimeConverted = uptimeSplit[0];
@@ -1003,7 +1000,6 @@ class SecSmart extends utils.Adapter {
 		const uptimeHour = (uptimeTimeSplit[0] > 1) ? " Stunden " : " Stunde ";
 		const uptimeMinute = (uptimeTimeSplit[1] > 1) ? " Minuten " : " Minute ";
 		uptimeConverted = uptimeSplit[0] + uptimeYear + uptimeSplit[1] + uptimeDay + uptimeTimeSplit[0] + uptimeHour + uptimeTimeSplit[1] + uptimeMinute;
-		this.log.info(uptimeConverted);
 		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
 	}
 
@@ -1543,7 +1539,7 @@ class SecSmart extends utils.Adapter {
 				"role": "text",
 				"type": "string",
 				"read": true,
-				"write": tfalse,
+				"write": false,
 				"states": {
 					"Supply and exhaust air":"Supply and exhaust air",
 					"Only supply air":"Only supply air",

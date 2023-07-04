@@ -82,7 +82,7 @@
     "native": {
         "apiUrl": "https://api.sec-smart.app/v1/",
         "apiToken": "",
-        "apiRequestIntervall": "60",
+        "apiRequestIntervall": 60,
         "protectedNative": ["apiToken"],
         "encryptedNative": ["apiToken"]
     },
