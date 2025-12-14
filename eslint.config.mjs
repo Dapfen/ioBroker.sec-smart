@@ -45,7 +45,4 @@ export default defineConfig([globalIgnores(["**/.eslintrc.js"]), {
 
         semi: ["error", "always"],
     },
-    "parserOptions": {
-        "sourceType": "module"
-    }
 }]);
