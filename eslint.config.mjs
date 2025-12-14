@@ -28,7 +28,7 @@ export default defineConfig([globalIgnores(["**/.eslintrc.js"]), {
     },
 
     rules: {
-        indent: ["error", "tab", { SwitchCase: 1 }],
+        "indent": "off",
         "no-console": "off",
         "no-unused-vars": "off",
         "no-var": "error",
