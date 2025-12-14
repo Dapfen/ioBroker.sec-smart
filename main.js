@@ -532,7 +532,7 @@ class SecSmart extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".label", {		
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".label", {
 			type: "state",
 			common:{
 				name: {
@@ -1680,22 +1680,22 @@ class SecSmart extends utils.Adapter {
 				type: "state",
 				common: {
 					name: {
-							"en": "installed in area",
-							"de": "installiert im Bereich",
-							"ru": "установленный в зоне",
-							"pt": "instalado na área",
-							"nl": "geïnstalleerd in de buurt",
-							"fr": "installé dans la zone",
-							"it": "installato in area",
-							"es": "instalado en la zona",
-							"pl": "zainstalowany na obszarze",
-							"uk": "встановлена в зоні",
-							"zh-cn": "在该地区安装"
-						},
-						role: "text",
-						type: "string",
-						read: true,
-						write: false
+						"en": "installed in area",
+						"de": "installiert im Bereich",
+						"ru": "установленный в зоне",
+						"pt": "instalado na área",
+						"nl": "geïnstalleerd in de buurt",
+						"fr": "installé dans la zone",
+						"it": "installato in area",
+						"es": "instalado en la zona",
+						"pl": "zainstalowany na obszarze",
+						"uk": "встановлена в зоні",
+						"zh-cn": "在该地区安装"
+					},
+					role: "text",
+					type: "string",
+					read: true,
+					write: false
 				},
 				native: {}
 			});
