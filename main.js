@@ -390,23 +390,30 @@ class SecSmart extends utils.Adapter {
 						native: {}
 					});
 					// create Info channel
-					await this.createChannelAsync("Gateway " + device.deviceid, "Info", {
-						name:{
-							"en": "Device information",
-							"de": "Informationen zum Gerät",
-							"ru": "Информация об устройстве",
-							"pt": "InformaÃ§Ãμes do dispositivo",
-							"nl": "Vernietig informatie",
-							"fr": "Information sur les dispositifs",
-							"it": "Informazioni sul dispositivo",
-							"es": "Información sobre dispositivos",
-							"pl": "Data dostępu",
-							"uk": "Інформація про пристрій",
-							"zh-cn": "证人信息"
-						}});
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info", {
+						type: 'channel',
+						common: {
+							name:{
+								"en": "Device information",
+								"de": "Informationen zum Gerät",
+								"ru": "Информация об устройстве",
+								"pt": "InformaÃ§Ãμes do dispositivo",
+								"nl": "Vernietig informatie",
+								"fr": "Information sur les dispositifs",
+								"it": "Informazioni sul dispositivo",
+								"es": "Información sobre dispositivos",
+								"pl": "Data dostępu",
+								"uk": "Інформація про пристрій",
+								"zh-cn": "证人信息"
+							},
+						},
+						native: {}
+					});
 					// add/update state for device infos
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "id", {
-						"name": {
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.id", {
+						type: "state",
+						common: {
+						name: {
 							"en": "Device id",
 							"de": "Geräte-ID",
 							"ru": "Устройство id",
@@ -419,13 +426,17 @@ class SecSmart extends utils.Adapter {
 							"uk": "Пристрої id",
 							"zh-cn": "Device id"
 						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": false
+						type: 'string',
+						role: "text",
+						read: true,
+						write: false
+					},
+					native: {}
 					});
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "type", {
-						"name": {
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.type", {
+						type: "state",
+						common: {
+						name: {
 							"en": "Device type",
 							"de": "Gerätetyp",
 							"ru": "Тип устройства",
@@ -438,13 +449,17 @@ class SecSmart extends utils.Adapter {
 							"uk": "Тип пристрою",
 							"zh-cn": "2. 证人类型"
 						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": false
+						role: "text",
+						type: "string",
+						read: true,
+						write: false
+					},
+					native: {}
 					});
-					await this.createStateAsync("Gateway " + device.deviceid, "Info", "name", {
-						"name": {
+					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.name", {
+						type: "state",
+						common:{
+						name: {
 							"en": "Device name",
 							"de": "Bezeichnung des Geräts",
 							"ru": "Наименование устройства",
@@ -457,15 +472,17 @@ class SecSmart extends utils.Adapter {
 							"uk": "Назва пристрою",
 							"zh-cn": "证人姓名"
 						},
-						"role": "text",
-						"type": "string",
-						"read": true,
-						"write": true
+						role: "text",
+						type: "string",
+						read: true,
+						write: true
+					},
+					native: {}
 					});
 
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.id", {val: device.deviceid, ack: true});
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.type", {val: device.type, ack: true});
-					await this.setStateAsync("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
+					await this.setState("Gateway " + device.deviceid + ".Info.id", {val: device.deviceid, ack: true});
+					await this.setState("Gateway " + device.deviceid + ".Info.type", {val: device.type, ack: true});
+					await this.setState("Gateway " + device.deviceid + ".Info.name", {val: device.name, ack: true});
 
 					this.setAreas(device.deviceid);
 					this.setSettings(device.deviceid);
@@ -496,22 +513,29 @@ class SecSmart extends utils.Adapter {
 
 	// Add/update datapoints in areas
 	async setArea(id, area, data) {
-		await this.createChannelAsync("Gateway " + id, "Settings_" + area, {
-			name:{
-				"en": "Area data",
-				"de": "Bereichsdaten",
-				"ru": "Областные данные",
-				"pt": "Dados de área",
-				"nl": "Area data",
-				"fr": "Données sur les zones",
-				"it": "Dati dell'area",
-				"es": "Datos de zona",
-				"pl": "Obszar",
-				"uk": "Об'єм даних",
-				"zh-cn": "区域数据"
-			}});
-		await this.createStateAsync("Gateway " + id, "Settings_" + area, "label", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area, {
+			type: "channel",
+			common: {
+				name:{
+					"en": "Area data",
+					"de": "Bereichsdaten",
+					"ru": "Областные данные",
+					"pt": "Dados de área",
+					"nl": "Area data",
+					"fr": "Données sur les zones",
+					"it": "Dati dell'area",
+					"es": "Datos de zona",
+					"pl": "Obszar",
+					"uk": "Об'єм даних",
+					"zh-cn": "区域数据"
+				}
+			},
+			native: {}
+		});
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".label", {		
+			type: "state",
+			common:{
+			name: {
 				"en": "Area label",
 				"de": "Bereichsbezeichnung",
 				"ru": "Area этикетка",
@@ -524,13 +548,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Плоский ярлик",
 				"zh-cn": "区域标签"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
+			role: "text",
+			type: "string",
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_" + area, "mode", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".mode", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Area mode",
 				"de": "Bereichsmodus",
 				"ru": "Режим зоны",
@@ -543,11 +571,11 @@ class SecSmart extends utils.Adapter {
 				"uk": "Режим роботи",
 				"zh-cn": "区域模式"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": true,
-			"states":{
+			role: "text",
+			type: "string",
+			read: true,
+			write: true,
+			states:{
 				"Fans off":"Fans off",
 				"Manual 1":"Manual 1",
 				"Manual 2":"Manual 2",
@@ -562,9 +590,11 @@ class SecSmart extends utils.Adapter {
 				"Snooze":"Snooze",
 				"INACTIVE":"INACTIVE"
 			}
+			},
+			native: {}
 		});
-		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + ".label", {val: data.label, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + ".mode", {val: data.mode, ack: true});
+		await this.setState("Gateway " + id + "." + "Settings_" + area + ".label", {val: data.label, ack: true});
+		await this.setState("Gateway " + id + "." + "Settings_" + area + ".mode", {val: data.mode, ack: true});
 
 		for(const i in data.timers)
 			this.setTimers(id, area, i, data.timers[i]);
@@ -572,8 +602,10 @@ class SecSmart extends utils.Adapter {
 
 	// Add/Update datapoints timers in areas
 	async setTimers(id, area, timer, data) {
-		await this.createStateAsync("Gateway " + id,  "Settings_" + area, timer + "_active", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_active", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Timer status",
 				"de": "Timing-Status",
 				"ru": "Статус таймера",
@@ -586,13 +618,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Статус на сервери",
 				"zh-cn": "时间状况"
 			},
-			"role": "state",
-			"type": "boolean",
-			"read": true,
-			"write": true
+			role: "state",
+			type: "boolean",
+			read: true,
+			write: true
+		},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_" + area, timer + "_mode", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_mode", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Timer mode",
 				"de": "Timer-Modus",
 				"ru": "Таймерный режим",
@@ -605,11 +641,11 @@ class SecSmart extends utils.Adapter {
 				"uk": "Режим таймера",
 				"zh-cn": "时间模式"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": true,
-			"states": {
+			role: "text",
+			type: "string",
+			read: true,
+			write: true,
+			states: {
 				"Fans off":"Fans off",
 				"Manual 1":"Manual 1",
 				"Manual 2":"Manual 2",
@@ -624,9 +660,13 @@ class SecSmart extends utils.Adapter {
 				"Snooze":"Snooze",
 				"INACTIVE":"INACTIVE"
 			}
+			},
+			native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_" + area, timer + "_time", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_time", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Timer status",
 				"de": "Timing-Status",
 				"ru": "Статус таймера",
@@ -639,15 +679,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Статус на сервери",
 				"zh-cn": "时间状况"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": true
+			role: "text",
+			type: "string",
+			read: true,
+			write: true
+		},
+		native: {}
 		});
 
-		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_active", {val: data.active, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_mode", {val: data.mode, ack: true});
-		await this.setStateAsync("Gateway " + id + "." + "Settings_" + area + "." + timer +"_time", {val: data.time, ack: true});
+		await this.setState("Gateway " + id + "." + "Settings_" + area + "." + timer +"_active", {val: data.active, ack: true});
+		await this.setState("Gateway " + id + "." + "Settings_" + area + "." + timer +"_mode", {val: data.mode, ack: true});
+		await this.setState("Gateway " + id + "." + "Settings_" + area + "." + timer +"_time", {val: data.time, ack: true});
 	}
 
 
@@ -663,8 +705,10 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 	async setSettingsData(id, SettingsData) {
-		await this.createChannelAsync("Gateway " + id, "Settings_General", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Settings",
 				"de": "Einstellungen",
 				"ru": "Настройки",
@@ -677,9 +721,13 @@ class SecSmart extends utils.Adapter {
 				"uk": "Налаштування",
 				"zh-cn": "确定"
 			},
+		},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "FilterResetIntervall", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Filter change intervall",
 				"de": "Filterwechselintervall",
 				"ru": "Фильтр изменить интервал",
@@ -692,16 +740,20 @@ class SecSmart extends utils.Adapter {
 				"uk": "Інтервал зміни фільтра",
 				"zh-cn": "B. 瓦利的改变"
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"min": 90,
-			"max": 270,
-			"step": 10,
-			"write": true
+			role: "text",
+			type: "number",
+			read: true,
+			min: 90,
+			max: 270,
+			step: 10,
+			write: true
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "FilterRemainingTimeReset", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".FilterRemainingTimeReset", {
+			type: "state",
+			common: {
+			name: {
 				"en": "reset filter remaining time",
 				"de": "Restlaufzeit Filter zurücksetzen",
 				"ru": "сброс фильтра оставшееся время",
@@ -714,13 +766,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "скидання фільтра, що залишився час",
 				"zh-cn": "时间过长"
 			},
-			"role": "text",
-			"type": "boolean",
-			"read": true,
-			"write": true
+			role: "text",
+			type: "boolean",
+			read: true,
+			write: true
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "CO2", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".CO2", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of CO² in ppm.",
 				"de": "Tatsächlicher Sensorwert von CO2 in ppm.",
 				"ru": "Фактическое значение датчика CO2 в ppm.",
@@ -733,13 +789,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Фактичне значення датчика CO2 в ppm.",
 				"zh-cn": "CO2的实际传感器,ppm。."
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": true
+			role: "text",
+			type: "number",
+			read: true,
+			write: true
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "Humidity", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".Humidity", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of humidity",
 				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit",
 				"ru": "Фактическое значение датчика влажности",
@@ -752,13 +812,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Фактичне значення датчика вологості",
 				"zh-cn": "湿度的实际传感"
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": true
+			role: "text",
+			type: "number",
+			read: true,
+			write: true
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "SleepTime", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".SleepTime", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Sleep Time",
 				"de": "Zeit für Schlafmodus",
 				"ru": "Время сна",
@@ -771,15 +835,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Час сну",
 				"zh-cn": "时间"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 10,
-			"max": 250,
-			"read": true,
-			"write": true
+			role: "text",
+			type: "number",
+			min: 10,
+			max: 250,
+			read: true,
+			write: true
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "DeviceTime", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".DeviceTime", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Device Time",
 				"de": "Zeit des Geräts",
 				"ru": "Время устройства",
@@ -792,13 +860,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Час пристрою",
 				"zh-cn": "时间"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
+			role: "text",
+			type: "string",
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "DeviceDate", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".DeviceDate", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Device Date",
 				"de": "Datum des Gerätes",
 				"ru": "Дата устройства",
@@ -811,13 +883,17 @@ class SecSmart extends utils.Adapter {
 				"uk": "Дата пристрою",
 				"zh-cn": "目 录"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
+			role: "text",
+			type: "string",
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Settings_General", "SummerMode", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".SummerMode", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Sommer modus",
 				"de": "Sommermodus",
 				"ru": "Sommer модус",
@@ -830,21 +906,23 @@ class SecSmart extends utils.Adapter {
 				"uk": "Соммер модус",
 				"zh-cn": "中小企业"
 			},
-			"role": "state",
-			"type": "boolean",
-			"read": true,
-			"write": true
+			role: "state",
+			type: "boolean",
+			read: true,
+			write: true
+			},
+		native: {}
 		});
 		const setResetFalse = false;
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".FilterRemainingTimeReset", {val: setResetFalse, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".CO2", {val: SettingsData.thresholds.co2, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".Humidity", {val: SettingsData.thresholds.humidity, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".SleepTime", {val: SettingsData.sleepTime, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".DeviceTime", {val: SettingsData.deviceTime.time, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".DeviceDate", {val: SettingsData.deviceTime.date, ack: true});
 		//funktioniert noch nicht set sommermode
-		await this.setStateAsync("Gateway " + id + ".Settings_General" + ".SummerMode", {val: SettingsData.summermode, ack: true});
+		await this.setState("Gateway " + id + ".Settings_General" + ".SummerMode", {val: SettingsData.summermode, ack: true});
 	}
 	// Add/Update telemetry data
 	async setTelemetry(id) {
@@ -858,8 +936,10 @@ class SecSmart extends utils.Adapter {
 		}
 	}
 	async setTelemetryData(id, TelemetryData) {
-		await this.createChannelAsync("Gateway " + id, "Info_Telemetry", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Telemetry",
 				"de": "Telemetrie",
 				"ru": "Телеметрия",
@@ -872,9 +952,13 @@ class SecSmart extends utils.Adapter {
 				"uk": "Телеметрія",
 				"zh-cn": "电话测量"
 			},
+		},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "restFilterTime", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Remaining filter run time in days",
 				"de": "Rest Filterlaufzeit in Tagen",
 				"ru": "Оставшееся время запуска фильтра в днях",
@@ -891,9 +975,13 @@ class SecSmart extends utils.Adapter {
 			"type": "number",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "CO2", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".CO2", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of CO² in ppm",
 				"de": "Tatsächlicher Sensorwert von CO2 in ppm",
 				"ru": "Фактическое значение датчика CO2 в ppm",
@@ -910,9 +998,13 @@ class SecSmart extends utils.Adapter {
 			"type": "number",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "humidity", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".humidity", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of humidity in %",
 				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit in %",
 				"ru": "Фактическое значение датчика влажности в %",
@@ -929,9 +1021,13 @@ class SecSmart extends utils.Adapter {
 			"type": "number",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "tempInside", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".tempInside", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of room temperature in °C",
 				"de": "Tatsächlicher Sensorwert der Raumtemperatur in °C",
 				"ru": "Фактическое значение датчика комнатной температуры в °C",
@@ -948,9 +1044,13 @@ class SecSmart extends utils.Adapter {
 			"type": "string",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "tempOutside", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Actual sensor value of outside temperature in °C",
 				"de": "Ist-Sensorwert der Außentemperatur in °C",
 				"ru": "Фактическое значение датчика наружной температуры в °C",
@@ -967,9 +1067,13 @@ class SecSmart extends utils.Adapter {
 			"type": "string",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Info_Telemetry", "uptime", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".uptime", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Uptime of the SEC Smart system",
 				"de": "Bisherige Laufzeit des SEC Smart Systems",
 				"ru": "Uptime системы SEC Smart",
@@ -986,12 +1090,14 @@ class SecSmart extends utils.Adapter {
 			"type": "string",
 			"read": true,
 			"write": false
+			},
+		native: {}
 		});
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".humidity", {val: TelemetryData.humidity, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".tempInside", {val: TelemetryData.Ti, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {val: TelemetryData.Ta, ack: true});
 		const uptimeSplit = TelemetryData.uptime.split(".");
 		const uptimeTimeSplit = uptimeSplit[2].split(":");
 		let uptimeConverted = uptimeSplit[0];
@@ -1000,7 +1106,7 @@ class SecSmart extends utils.Adapter {
 		const uptimeHour = (uptimeTimeSplit[0] > 1) ? " Stunden " : " Stunde ";
 		const uptimeMinute = (uptimeTimeSplit[1] > 1) ? " Minuten " : " Minute ";
 		uptimeConverted = uptimeSplit[0] + uptimeYear + uptimeSplit[1] + uptimeDay + uptimeTimeSplit[0] + uptimeHour + uptimeTimeSplit[1] + uptimeMinute;
-		await this.setStateAsync("Gateway " + id + ".Info_Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
+		await this.setState("Gateway " + id + ".Info_Telemetry" + ".uptime", {val: uptimeConverted, ack: true});
 	}
 
 	async setSetup(id) {
@@ -1015,8 +1121,10 @@ class SecSmart extends utils.Adapter {
 	}
 
 	async setSetupData(id, setupData) {
-		await this.createChannelAsync("Gateway " + id, "Setup_fans", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Returns the device subobject setup for the URL-encoded device ID.",
 				"de": "Gibt den Geräte-Setup für die Geräte-ID zurück.",
 				"ru": "Возвращает установку подобъектов устройства для URL-кодированного устройства ID.",
@@ -1028,7 +1136,9 @@ class SecSmart extends utils.Adapter {
 				"pl": "Powraca podobiznę podobizną dla URL-encoded device ID.",
 				"uk": "Повертає налаштування підоб'єкта пристрою для ідентифікатора URL-кодованого пристрою.",
 				"zh-cn": "恢复化解装置的装置分包。."
+			}
 			},
+		native: {}
 		});
 
 		const systemInfo = setupData.systems;
@@ -1039,8 +1149,10 @@ class SecSmart extends utils.Adapter {
 		for(const i in areaInfo) {
 			this.setAreaSetup(id, i, areaInfo[i]);
 		}
-		await this.createChannelAsync("Gateway " + id, "Setup_inputDi", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Set up the configuration for the digital input.",
 				"de": "Richten Sie die Konfiguration für den digitalen Eingang ein.",
 				"ru": "Настройте конфигурацию для цифрового входа.",
@@ -1052,10 +1164,14 @@ class SecSmart extends utils.Adapter {
 				"pl": "Ustanowić konfigurację wejściówki cyfrowej.",
 				"uk": "Налаштування цифрового входу.",
 				"zh-cn": "建立数字投入组合。."
+			}
 			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputDi", "function", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi" + ".function", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Response when triggered by digital input",
 				"de": "Antwort beim Auslösen durch digitale Eingabe",
 				"ru": "Ответ при запуске цифрового входа",
@@ -1068,11 +1184,11 @@ class SecSmart extends utils.Adapter {
 				"uk": "Відповідь при запуску цифрового введення",
 				"zh-cn": "数字投入引起的反应"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false,
-			"states": {
+			role: "text",
+			type: "string",
+			read: true,
+			write: false,
+			states: {
 				"None":"None",
 				"Set fan stage 0":"Set fan stage 0",
 				"Set fan stage 1":"Set fan stage 1",
@@ -1099,15 +1215,19 @@ class SecSmart extends utils.Adapter {
 				"Keep at CO2":"Keep at CO2",
 				"Keep at humidity":"Keep at humidity"
 			}
+			},
+		native: {}
 		});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".function", {val: setupData.inputDi.function, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputDi" + ".function", {val: setupData.inputDi.function, ack: true});
 
 		const areaDigitalInput = setupData.inputDi.areas;
 		for(const i in areaDigitalInput) {
 			this.setDigitalInput(id, i, areaDigitalInput[i]);
 		}
-		await this.createChannelAsync("Gateway " + id, "Setup_outputDo", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Set up the configuration for the digital output.",
 				"de": "Richten Sie die Konfiguration für den digitalen Ausgang ein.",
 				"ru": "Настройте конфигурацию для цифрового вывода.",
@@ -1119,10 +1239,14 @@ class SecSmart extends utils.Adapter {
 				"pl": "Ustanowić konfigurację cyfrowej produkcji.",
 				"uk": "Налаштування цифрового виходу.",
 				"zh-cn": "建立数字产出组合。."
-			},
+			}
+		},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_outputDo", "function", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo" + ".function", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Response to signal via digital output",
 				"de": "Antwort auf das Signal über den digitalen Ausgang",
 				"ru": "Ответ на сигнал через цифровой выход",
@@ -1135,11 +1259,11 @@ class SecSmart extends utils.Adapter {
 				"uk": "Відповідь на сигнал через цифровий вихід",
 				"zh-cn": "通过数字产出对信号的反应"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false,
-			"states": {
+			role: "text",
+			type: "string",
+			read: true,
+			write: false,
+			states: {
 				"None":"None",
 				"Fan stage 0 active":"Fan stage 0 active",
 				"Fan stage 1 active":"Fan stage 1 active",
@@ -1158,15 +1282,19 @@ class SecSmart extends utils.Adapter {
 				"General message":"General message",
 				"General error":"General error"
 			}
+			},
+		native: {}
 		});
-		await this.setStateAsync("Gateway " + id + ".Setup_outputDo" + ".function", {val: setupData.outputDo.function, ack: true});
+		await this.setState("Gateway " + id + ".Setup_outputDo" + ".function", {val: setupData.outputDo.function, ack: true});
 		const areaDigitalOutput = setupData.outputDo.areas;
 		for(const i in areaDigitalOutput) {
 			this.setDigitalOutput(id, i, areaDigitalOutput[i]);
 		}
 
-		await this.createChannelAsync("Gateway " + id, "Setup_inputAi", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi", {
+			type: "channel",
+			common: {
+			name: {
 				"en": "Set up the configuration for the analog input.",
 				"de": "Richten Sie die Konfiguration für den analogen Eingang ein.",
 				"ru": "Настройте конфигурацию для аналогового входа.",
@@ -1178,10 +1306,14 @@ class SecSmart extends utils.Adapter {
 				"pl": "Ustanowić konfigurację dla sygnału analogowego.",
 				"uk": "Встановити конфігурацію для аналогового введення.",
 				"zh-cn": "设立类似投入的组合。."
-			},
+			}
+		},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "function", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".function", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Response to signal via digital output",
 				"de": "Antwort auf das Signal über den digitalen Ausgang",
 				"ru": "Ответ на сигнал через цифровой выход",
@@ -1194,11 +1326,11 @@ class SecSmart extends utils.Adapter {
 				"uk": "Відповідь на сигнал через цифровий вихід",
 				"zh-cn": "通过数字产出对信号的反应"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false,
-			"states": {
+			role: "text",
+			type: "string",
+			read: true,
+			write: false,
+			states: {
 				"None":"None",
 				"Fan stage":"Fan stage",
 				"Humidity":"Humidity",
@@ -1206,9 +1338,13 @@ class SecSmart extends utils.Adapter {
 				"Ti":"Ti",
 				"Ta":"Ta"
 			}
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "functionType", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".functionType", {
+			type: "state",
+			common: {
+			name: {
 				"en": "function type",
 				"de": "Funktionart",
 				"ru": "тип функции",
@@ -1221,17 +1357,21 @@ class SecSmart extends utils.Adapter {
 				"uk": "тип функції",
 				"zh-cn": "功能类型"
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false,
-			"states": {
+			role: "text",
+			type: "string",
+			read: true,
+			write: false,
+			states: {
 				"0-10 V":"0-10 V",
 				"4-20 mA":"4-20 mA"
 			}
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_x_lower", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_lower", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Analog input value in % for the lower setpoint",
 				"de": "Analoger Eingangswert in % für den unteren Sollwert",
 				"ru": "Аналоговая входная стоимость в % для нижней точки",
@@ -1244,15 +1384,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Значення аналогового введення в % для нижньої точки",
 				"zh-cn": "低定点投入值"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 0,
-			"max": 50,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 0,
+			max: 50,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_x_upper", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_upper", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Analog input value in % for the upper setpoint",
 				"de": "Analoger Eingangswert in % für den oberen Sollwert",
 				"ru": "Аналоговая входная стоимость в % для верхней точки",
@@ -1265,15 +1409,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Значення аналогового введення в % для верхньої точки",
 				"zh-cn": "高点投入值"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 50,
-			"max": 100,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 50,
+			max: 100,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_lower", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_lower", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Fanlevel to apply at lower setpoint",
 				"de": "Fanlevel zur Anwendung im unteren Sollwert",
 				"ru": "Fanlevel для подачи заявки на более низкую точку",
@@ -1286,15 +1434,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Вентилятор для застосування в нижньому точках",
 				"zh-cn": "低级申请"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 0,
-			"max": 3,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 0,
+			max: 3,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yFanLevel_upper", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_upper", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Fanlevel to apply at upper setpoint",
 				"de": "Fanlevel zur Anwendung im oberen Sollwert",
 				"ru": "Fanlevel для подачи заявки на верхней точке",
@@ -1307,15 +1459,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Вентилятор для застосування в верхній точці",
 				"zh-cn": "申请上级"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 3,
-			"max": 6,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 3,
+			max: 6,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_lower", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_lower", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Humidity value in % for humidity regulation mode to apply at lower setpoint",
 				"de": "Luftfeuchtigkeitswert in % für Feuchtigkeitsregulierungsmodus auf niedrigerem Sollwert",
 				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на более низкой точке",
@@ -1328,15 +1484,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Значення вологості в % для режиму регулювання вологості для застосування при нижчій точковій точці",
 				"zh-cn": "湿度管理模式的50%的湿度"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 0,
-			"max": 50,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 0,
+			max: 50,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yHumidity_upper", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_upper", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Humidity value in % for humidity regulation mode to apply at upper setpoint",
 				"de": "Feuchtewert in % für Feuchteregelungsart, die sich auf den oberen Sollwert bezieht",
 				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на верхней точке",
@@ -1349,15 +1509,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Значення вологості в % для режиму регулювання вологості наносити на верхню точку",
 				"zh-cn": "湿度管理模式的50%的湿度"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 50,
-			"max": 100,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 50,
+			max: 100,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_lower", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_lower", {
+			type: "state",
+			common: {
+			name: {
 				"en": "CO² value in ppm for CO² regulation mode to apply at lower setpoint",
 				"de": "CO2-Wert in ppm für CO2-Regelungsmodus auf niedrigeren Sollwert",
 				"ru": "Значение CO2 в ppm для режима регулирования CO2 для применения на более низкой точке",
@@ -1370,15 +1534,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "CO2 значення в ppm для режиму регулювання CO2 на нижню точку",
 				"zh-cn": "CO2 条例模式ppm中的CO2价值"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 0,
-			"max": 1500,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 0,
+			max: 1500,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yCo2_upper", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_upper", {
+			type: "state",
+			common: {
+			name: {
 				"en": "CO² value in ppm for CO² regulation mode to apply at upper setpoint",
 				"de": "CO2 -Wert in ppm für CO2 -Regelungsmodus für den oberen Sollwert",
 				"ru": "Значение CO2 в ppm для режима регулирования CO2, чтобы применить на верхней точке",
@@ -1391,15 +1559,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "CO2 значення в ppm для режиму регулювання CO2, щоб застосувати в верхній частині",
 				"zh-cn": "CO2 公司2条例模式ppm中的CO2价值"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 1500,
-			"max": 5000,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 1500,
+			max: 5000,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_lower", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_lower", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Lower setpoint in °C for linear curve when used for an analog temperature sensor",
 				"de": "Unterer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
 				"ru": "Более низкая установка в °C для линейной кривой при использовании для аналогового датчика температуры",
@@ -1412,15 +1584,19 @@ class SecSmart extends utils.Adapter {
 				"uk": "Нижня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
 				"zh-cn": "使用模拟温度传感器的蒸气曲线的°C"
 			},
-			"role": "text",
-			"type": "number",
-			"min": -50,
-			"max": 0,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: -50,
+			max: 0,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.createStateAsync("Gateway " + id, "Setup_inputAi", "curvePara_yTemp_upper", {
-			"name": {
+		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_upper", {
+			type: "state",
+			common: {
+			name: {
 				"en": "Upper setpoint in °C for linear curve when used for an analog temperature sensor",
 				"de": "Oberer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
 				"ru": "Верхняя установка в °C для линейной кривой при использовании для аналогового датчика температуры",
@@ -1433,25 +1609,27 @@ class SecSmart extends utils.Adapter {
 				"uk": "Верхня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
 				"zh-cn": "使用模拟温度传感器的线曲线上级点"
 			},
-			"role": "text",
-			"type": "number",
-			"min": 0,
-			"max": 50,
-			"read": true,
-			"write": false,
+			role: "text",
+			type: "number",
+			min: 0,
+			max: 50,
+			read: true,
+			write: false
+			},
+		native: {}
 		});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".function", {val: setupData.inputAi.function, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".functionType", {val: setupData.inputAi.functionType, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_lower", {val: setupData.inputAi.curveParameters.x.lower, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_upper", {val: setupData.inputAi.curveParameters.x.upper, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_lower", {val: setupData.inputAi.curveParameters.yFanlevel.lower, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_upper", {val: setupData.inputAi.curveParameters.yFanlevel.upper, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_lower", {val: setupData.inputAi.curveParameters.yHumidity.lower, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_upper", {val: setupData.inputAi.curveParameters.yHumidity.upper, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_lower", {val: setupData.inputAi.curveParameters.yCo2.lower, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_upper", {val: setupData.inputAi.curveParameters.yCo2.upper, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_lower", {val: setupData.inputAi.curveParameters.yTemp.lower, ack: true});
-		await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_upper", {val: setupData.inputAi.curveParameters.yTemp.upper, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".function", {val: setupData.inputAi.function, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".functionType", {val: setupData.inputAi.functionType, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_lower", {val: setupData.inputAi.curveParameters.x.lower, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_upper", {val: setupData.inputAi.curveParameters.x.upper, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_lower", {val: setupData.inputAi.curveParameters.yFanlevel.lower, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_upper", {val: setupData.inputAi.curveParameters.yFanlevel.upper, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_lower", {val: setupData.inputAi.curveParameters.yHumidity.lower, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_upper", {val: setupData.inputAi.curveParameters.yHumidity.upper, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_lower", {val: setupData.inputAi.curveParameters.yCo2.lower, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_upper", {val: setupData.inputAi.curveParameters.yCo2.upper, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_lower", {val: setupData.inputAi.curveParameters.yTemp.lower, ack: true});
+		await this.setState("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_upper", {val: setupData.inputAi.curveParameters.yTemp.upper, ack: true});
 		const areaAnalogInput = setupData.outputDo.areas;
 		for(const i in areaAnalogInput) {
 			this.setAnalogInput(id, i, areaAnalogInput[i]);
@@ -1461,8 +1639,10 @@ class SecSmart extends utils.Adapter {
 	async setSystemsSetup(id, system, data) {
 		try {
 			const systemId = parseInt(system.slice(-1));
-			await this.createStateAsync("Gateway " + id, "Setup_fans", "system" + systemId + "_type", {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {
+				type: "state",
+				common: {
+				name: {
 					"en": "Remaining filter run time in days",
 					"de": "Rest Filterlaufzeit in Tagen",
 					"ru": "Оставшееся время запуска фильтра в днях",
@@ -1475,11 +1655,11 @@ class SecSmart extends utils.Adapter {
 					"uk": "Термін дії фільтра в день",
 					"zh-cn": "时间过长。"
 				},
-				"role": "text",
-				"type": "string",
-				"read": true,
-				"write": false,
-				"states": {
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
 					"None":"None",
 					"SEVi160":"SEVi160",
 					"SEVi200":"SEVi200",
@@ -1493,9 +1673,13 @@ class SecSmart extends utils.Adapter {
 					"SEVi160D Mini PRO":"SEVi160D Mini PRO",
 					"Configurable Device":"Configurable Device",
 				}
+				},
+		native: {}
 			});
-			await this.createStateAsync("Gateway " + id, "Setup_fans", "system" + systemId + "_installedOnArea", {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {
+				type: "state",
+			common: {
+			name: {
 					"en": "installed in area",
 					"de": "installiert im Bereich",
 					"ru": "установленный в зоне",
@@ -1508,13 +1692,15 @@ class SecSmart extends utils.Adapter {
 					"uk": "встановлена в зоні",
 					"zh-cn": "在该地区安装"
 				},
-				"role": "text",
-				"type": "string",
-				"read": true,
-				"write": false,
+				role: "text",
+				type: "string",
+				read: true,
+				write: false
+				},
+		native: {}
 			});
-			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {val: data.type, ack: true});
-			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {val: data.installed, ack: true});
+			await this.setState("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {val: data.type, ack: true});
+			await this.setState("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {val: data.installed, ack: true});
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -1522,8 +1708,10 @@ class SecSmart extends utils.Adapter {
 	async setAreaSetup(id, area, data) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			await this.createStateAsync("Gateway " + id, "Setup_fans", "area" + areaId, {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".area" + areaId, {
+				type: "state",
+				common: {
+				name: {
 					"en": "Function of the fan per area",
 					"de": "Funktion des Lüfters pro Bereich",
 					"ru": "Функция вентилятора на зону",
@@ -1536,17 +1724,19 @@ class SecSmart extends utils.Adapter {
 					"uk": "Функції вентилятора на область",
 					"zh-cn": "B. 每一地区狂热的功能"
 				},
-				"role": "text",
-				"type": "string",
-				"read": true,
-				"write": false,
-				"states": {
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
 					"Supply and exhaust air":"Supply and exhaust air",
 					"Only supply air":"Only supply air",
 					"Only exhaust air":"Only exhaust air",
 				}
+				},
+		native: {}
 			});
-			await this.setStateAsync("Gateway " + id + ".Setup_fans" + ".area" + areaId, {val: data, ack: true});
+			await this.setState("Gateway " + id + ".Setup_fans" + ".area" + areaId, {val: data, ack: true});
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -1554,8 +1744,10 @@ class SecSmart extends utils.Adapter {
 	async setDigitalInput(id, area, data) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			await this.createStateAsync("Gateway " + id, "Setup_inputDi", "area" + areaId + "_inputDi", {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {
+				type: "state",
+				common: {
+				name: {
 					"en": "Allocation of a digital input signal to an area",
 					"de": "Zuordnung eines digitalen Eingangssignals zu einem Bereich",
 					"ru": "Распределение цифрового входного сигнала в зону",
@@ -1568,12 +1760,14 @@ class SecSmart extends utils.Adapter {
 					"uk": "Розміщення цифрового сигналу в область",
 					"zh-cn": "向一个地区分配数字投入信号"
 				},
-				"role": "state",
-				"type": "boolean",
-				"read": true,
-				"write": false,
+				role: "state",
+				type: "boolean",
+				read: true,
+				write: false
+				},
+		native: {}
 			});
-			await this.setStateAsync("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {val: data, ack: true});
+			await this.setState("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {val: data, ack: true});
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -1581,8 +1775,10 @@ class SecSmart extends utils.Adapter {
 	async setDigitalOutput(id, area, data) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			await this.createStateAsync("Gateway " + id, "Setup_outputDo", "area" + areaId + "_outputDo", {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {
+				type: "state",
+				common: {
+				name: {
 					"en": "Allocation of a digital output signal from an area",
 					"de": "Zuordnung eines digitalen Ausgangssignals aus einem Bereich",
 					"ru": "Распределение цифрового выходного сигнала из области",
@@ -1595,12 +1791,14 @@ class SecSmart extends utils.Adapter {
 					"uk": "Розміщення цифрового вихідного сигналу з області",
 					"zh-cn": "从一个地区分配数字产出信号"
 				},
-				"role": "state",
-				"type": "boolean",
-				"read": true,
-				"write": false,
+				role: "state",
+				type: "boolean",
+				read: true,
+				write: false
+				},
+		native: {}
 			});
-			await this.setStateAsync("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {val: data, ack: true});
+			await this.setState("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {val: data, ack: true});
 		} catch (err) {
 			this.log.error(err);
 		}
@@ -1608,8 +1806,10 @@ class SecSmart extends utils.Adapter {
 	async setAnalogInput(id, area, data) {
 		try {
 			const areaId = parseInt(area.slice(-1));
-			await this.createStateAsync("Gateway " + id, "Setup_inputAi", "area" + areaId + "_inputAi", {
-				"name": {
+			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {
+				type: "state",
+				common: {
+				name: {
 					"en": "Allocation of a analog input signal to an area",
 					"de": "Zuordnung eines analogen Eingangssignals zu einem Bereich",
 					"ru": "Распределение аналогового входного сигнала в зону",
@@ -1622,12 +1822,14 @@ class SecSmart extends utils.Adapter {
 					"uk": "Розподіл аналогових вхідних сигналів на область",
 					"zh-cn": "向一个地区分配类似的投入信号"
 				},
-				"role": "state",
-				"type": "boolean",
-				"read": true,
-				"write": false,
+				role: "state",
+				type: "boolean",
+				read: true,
+				write: false
+				},
+		native: {}
 			});
-			await this.setStateAsync("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {val: data, ack: true});
+			await this.setState("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {val: data, ack: true});
 		} catch (err) {
 			this.log.error(err);
 		}
