@@ -391,7 +391,7 @@ class SecSmart extends utils.Adapter {
 					});
 					// create Info channel
 					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info", {
-						type: 'channel',
+						type: "channel",
 						common: {
 							name:{
 								"en": "Device information",
@@ -413,71 +413,71 @@ class SecSmart extends utils.Adapter {
 					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.id", {
 						type: "state",
 						common: {
-						name: {
-							"en": "Device id",
-							"de": "Geräte-ID",
-							"ru": "Устройство id",
-							"pt": "Id do dispositivo",
-							"nl": "Vernietiging",
-							"fr": "Appareil id",
-							"it": "Dispositivo id",
-							"es": "Dispositivo id",
-							"pl": "Device id (ang.)",
-							"uk": "Пристрої id",
-							"zh-cn": "Device id"
+							name: {
+								"en": "Device id",
+								"de": "Geräte-ID",
+								"ru": "Устройство id",
+								"pt": "Id do dispositivo",
+								"nl": "Vernietiging",
+								"fr": "Appareil id",
+								"it": "Dispositivo id",
+								"es": "Dispositivo id",
+								"pl": "Device id (ang.)",
+								"uk": "Пристрої id",
+								"zh-cn": "Device id"
+							},
+							type: "string",
+							role: "text",
+							read: true,
+							write: false
 						},
-						type: 'string',
-						role: "text",
-						read: true,
-						write: false
-					},
-					native: {}
+						native: {}
 					});
 					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.type", {
 						type: "state",
 						common: {
-						name: {
-							"en": "Device type",
-							"de": "Gerätetyp",
-							"ru": "Тип устройства",
-							"pt": "Tipo de dispositivo",
-							"nl": "Device type",
-							"fr": "Type de dispositif",
-							"it": "Tipo di dispositivo",
-							"es": "Tipo de dispositivo",
-							"pl": "Device type",
-							"uk": "Тип пристрою",
-							"zh-cn": "2. 证人类型"
+							name: {
+								"en": "Device type",
+								"de": "Gerätetyp",
+								"ru": "Тип устройства",
+								"pt": "Tipo de dispositivo",
+								"nl": "Device type",
+								"fr": "Type de dispositif",
+								"it": "Tipo di dispositivo",
+								"es": "Tipo de dispositivo",
+								"pl": "Device type",
+								"uk": "Тип пристрою",
+								"zh-cn": "2. 证人类型"
+							},
+							role: "text",
+							type: "string",
+							read: true,
+							write: false
 						},
-						role: "text",
-						type: "string",
-						read: true,
-						write: false
-					},
-					native: {}
+						native: {}
 					});
 					await this.setObjectNotExistsAsync("Gateway " + device.deviceid + ".Info.name", {
 						type: "state",
 						common:{
-						name: {
-							"en": "Device name",
-							"de": "Bezeichnung des Geräts",
-							"ru": "Наименование устройства",
-							"pt": "Nome do dispositivo",
-							"nl": "Devicenaam",
-							"fr": "Nom du dispositif",
-							"it": "Nome del dispositivo",
-							"es": "Nombre del dispositivo",
-							"pl": "Device name",
-							"uk": "Назва пристрою",
-							"zh-cn": "证人姓名"
+							name: {
+								"en": "Device name",
+								"de": "Bezeichnung des Geräts",
+								"ru": "Наименование устройства",
+								"pt": "Nome do dispositivo",
+								"nl": "Devicenaam",
+								"fr": "Nom du dispositif",
+								"it": "Nome del dispositivo",
+								"es": "Nombre del dispositivo",
+								"pl": "Device name",
+								"uk": "Назва пристрою",
+								"zh-cn": "证人姓名"
+							},
+							role: "text",
+							type: "string",
+							read: true,
+							write: true
 						},
-						role: "text",
-						type: "string",
-						read: true,
-						write: true
-					},
-					native: {}
+						native: {}
 					});
 
 					await this.setState("Gateway " + device.deviceid + ".Info.id", {val: device.deviceid, ack: true});
@@ -535,61 +535,61 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".label", {		
 			type: "state",
 			common:{
-			name: {
-				"en": "Area label",
-				"de": "Bereichsbezeichnung",
-				"ru": "Area этикетка",
-				"pt": "Rótulo de área",
-				"nl": "Area label",
-				"fr": "Étiquette de zone",
-				"it": "Etichetta di area",
-				"es": "Etiqueta de zona",
-				"pl": "Label",
-				"uk": "Плоский ярлик",
-				"zh-cn": "区域标签"
+				name: {
+					"en": "Area label",
+					"de": "Bereichsbezeichnung",
+					"ru": "Area этикетка",
+					"pt": "Rótulo de área",
+					"nl": "Area label",
+					"fr": "Étiquette de zone",
+					"it": "Etichetta di area",
+					"es": "Etiqueta de zona",
+					"pl": "Label",
+					"uk": "Плоский ярлик",
+					"zh-cn": "区域标签"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + ".mode", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Area mode",
-				"de": "Bereichsmodus",
-				"ru": "Режим зоны",
-				"pt": "Modo de área",
-				"nl": "Area mode",
-				"fr": "Mode zone",
-				"it": "Modalità area",
-				"es": "Modo de zona",
-				"pl": "Tryb miejski",
-				"uk": "Режим роботи",
-				"zh-cn": "区域模式"
-			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: true,
-			states:{
-				"Fans off":"Fans off",
-				"Manual 1":"Manual 1",
-				"Manual 2":"Manual 2",
-				"Manual 3":"Manual 3",
-				"Manual 4":"Manual 4",
-				"Manual 5":"Manual 5",
-				"Manual 6":"Manual 6",
-				"Boost ventilation":"Boost ventilation",
-				"Humidity regulation":"Humidity regulation",
-				"CO2 regulation":"CO2 regulation",
-				"Timed program":"Timed program",
-				"Snooze":"Snooze",
-				"INACTIVE":"INACTIVE"
-			}
+				name: {
+					"en": "Area mode",
+					"de": "Bereichsmodus",
+					"ru": "Режим зоны",
+					"pt": "Modo de área",
+					"nl": "Area mode",
+					"fr": "Mode zone",
+					"it": "Modalità area",
+					"es": "Modo de zona",
+					"pl": "Tryb miejski",
+					"uk": "Режим роботи",
+					"zh-cn": "区域模式"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: true,
+				states:{
+					"Fans off":"Fans off",
+					"Manual 1":"Manual 1",
+					"Manual 2":"Manual 2",
+					"Manual 3":"Manual 3",
+					"Manual 4":"Manual 4",
+					"Manual 5":"Manual 5",
+					"Manual 6":"Manual 6",
+					"Boost ventilation":"Boost ventilation",
+					"Humidity regulation":"Humidity regulation",
+					"CO2 regulation":"CO2 regulation",
+					"Timed program":"Timed program",
+					"Snooze":"Snooze",
+					"INACTIVE":"INACTIVE"
+				}
 			},
 			native: {}
 		});
@@ -605,86 +605,86 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_active", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Timer status",
-				"de": "Timing-Status",
-				"ru": "Статус таймера",
-				"pt": "Status do temporizador",
-				"nl": "Timer status",
-				"fr": "État du temps",
-				"it": "Stato del timer",
-				"es": "Estado del tiempo",
-				"pl": "Status Timaru",
-				"uk": "Статус на сервери",
-				"zh-cn": "时间状况"
+				name: {
+					"en": "Timer status",
+					"de": "Timing-Status",
+					"ru": "Статус таймера",
+					"pt": "Status do temporizador",
+					"nl": "Timer status",
+					"fr": "État du temps",
+					"it": "Stato del timer",
+					"es": "Estado del tiempo",
+					"pl": "Status Timaru",
+					"uk": "Статус на сервери",
+					"zh-cn": "时间状况"
+				},
+				role: "state",
+				type: "boolean",
+				read: true,
+				write: true
 			},
-			role: "state",
-			type: "boolean",
-			read: true,
-			write: true
-		},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_mode", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Timer mode",
-				"de": "Timer-Modus",
-				"ru": "Таймерный режим",
-				"pt": "Modo de temporização",
-				"nl": "Timer mode",
-				"fr": "Mode Timer",
-				"it": "Modalità Timer",
-				"es": "Modo de temporizador",
-				"pl": "Timber",
-				"uk": "Режим таймера",
-				"zh-cn": "时间模式"
-			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: true,
-			states: {
-				"Fans off":"Fans off",
-				"Manual 1":"Manual 1",
-				"Manual 2":"Manual 2",
-				"Manual 3":"Manual 3",
-				"Manual 4":"Manual 4",
-				"Manual 5":"Manual 5",
-				"Manual 6":"Manual 6",
-				"Boost ventilation":"Boost ventilation",
-				"Humidity regulation":"Humidity regulation",
-				"CO2 regulation":"CO2 regulation",
-				"Timed program":"Timed program",
-				"Snooze":"Snooze",
-				"INACTIVE":"INACTIVE"
-			}
+				name: {
+					"en": "Timer mode",
+					"de": "Timer-Modus",
+					"ru": "Таймерный режим",
+					"pt": "Modo de temporização",
+					"nl": "Timer mode",
+					"fr": "Mode Timer",
+					"it": "Modalità Timer",
+					"es": "Modo de temporizador",
+					"pl": "Timber",
+					"uk": "Режим таймера",
+					"zh-cn": "时间模式"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: true,
+				states: {
+					"Fans off":"Fans off",
+					"Manual 1":"Manual 1",
+					"Manual 2":"Manual 2",
+					"Manual 3":"Manual 3",
+					"Manual 4":"Manual 4",
+					"Manual 5":"Manual 5",
+					"Manual 6":"Manual 6",
+					"Boost ventilation":"Boost ventilation",
+					"Humidity regulation":"Humidity regulation",
+					"CO2 regulation":"CO2 regulation",
+					"Timed program":"Timed program",
+					"Snooze":"Snooze",
+					"INACTIVE":"INACTIVE"
+				}
 			},
 			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_" + area + "." + timer + "_time", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Timer status",
-				"de": "Timing-Status",
-				"ru": "Статус таймера",
-				"pt": "Status do temporizador",
-				"nl": "Timer status",
-				"fr": "État du temps",
-				"it": "Stato del timer",
-				"es": "Estado del tiempo",
-				"pl": "Status Timaru",
-				"uk": "Статус на сервери",
-				"zh-cn": "时间状况"
+				name: {
+					"en": "Timer status",
+					"de": "Timing-Status",
+					"ru": "Статус таймера",
+					"pt": "Status do temporizador",
+					"nl": "Timer status",
+					"fr": "État du temps",
+					"it": "Stato del timer",
+					"es": "Estado del tiempo",
+					"pl": "Status Timaru",
+					"uk": "Статус на сервери",
+					"zh-cn": "时间状况"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: true
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: true
-		},
-		native: {}
+			native: {}
 		});
 
 		await this.setState("Gateway " + id + "." + "Settings_" + area + "." + timer +"_active", {val: data.active, ack: true});
@@ -708,210 +708,210 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Settings",
-				"de": "Einstellungen",
-				"ru": "Настройки",
-				"pt": "Configurações",
-				"nl": "Setting",
-				"fr": "Réglages",
-				"it": "Impostazioni impostazioni",
-				"es": "Ajustes",
-				"pl": "Setting",
-				"uk": "Налаштування",
-				"zh-cn": "确定"
+				name: {
+					"en": "Settings",
+					"de": "Einstellungen",
+					"ru": "Настройки",
+					"pt": "Configurações",
+					"nl": "Setting",
+					"fr": "Réglages",
+					"it": "Impostazioni impostazioni",
+					"es": "Ajustes",
+					"pl": "Setting",
+					"uk": "Налаштування",
+					"zh-cn": "确定"
+				},
 			},
-		},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Filter change intervall",
-				"de": "Filterwechselintervall",
-				"ru": "Фильтр изменить интервал",
-				"pt": "Intervalo de mudança de filtro",
-				"nl": "Filter verandering inval",
-				"fr": "Intervalle de changement de filtre",
-				"it": "Intervallo di cambio filtro",
-				"es": "Intervalo de cambio de filtro",
-				"pl": "Przesunięcie graniczne",
-				"uk": "Інтервал зміни фільтра",
-				"zh-cn": "B. 瓦利的改变"
+				name: {
+					"en": "Filter change intervall",
+					"de": "Filterwechselintervall",
+					"ru": "Фильтр изменить интервал",
+					"pt": "Intervalo de mudança de filtro",
+					"nl": "Filter verandering inval",
+					"fr": "Intervalle de changement de filtre",
+					"it": "Intervallo di cambio filtro",
+					"es": "Intervalo de cambio de filtro",
+					"pl": "Przesunięcie graniczne",
+					"uk": "Інтервал зміни фільтра",
+					"zh-cn": "B. 瓦利的改变"
+				},
+				role: "text",
+				type: "number",
+				read: true,
+				min: 90,
+				max: 270,
+				step: 10,
+				write: true
 			},
-			role: "text",
-			type: "number",
-			read: true,
-			min: 90,
-			max: 270,
-			step: 10,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".FilterRemainingTimeReset", {
 			type: "state",
 			common: {
-			name: {
-				"en": "reset filter remaining time",
-				"de": "Restlaufzeit Filter zurücksetzen",
-				"ru": "сброс фильтра оставшееся время",
-				"pt": "redefinir o tempo restante do filtro",
-				"nl": "filter overgebleven tijd",
-				"fr": "reset filter temps restant",
-				"it": "reset filtro tempo rimanente",
-				"es": "filtro restante tiempo",
-				"pl": "filtry resetowe",
-				"uk": "скидання фільтра, що залишився час",
-				"zh-cn": "时间过长"
+				name: {
+					"en": "reset filter remaining time",
+					"de": "Restlaufzeit Filter zurücksetzen",
+					"ru": "сброс фильтра оставшееся время",
+					"pt": "redefinir o tempo restante do filtro",
+					"nl": "filter overgebleven tijd",
+					"fr": "reset filter temps restant",
+					"it": "reset filtro tempo rimanente",
+					"es": "filtro restante tiempo",
+					"pl": "filtry resetowe",
+					"uk": "скидання фільтра, що залишився час",
+					"zh-cn": "时间过长"
+				},
+				role: "text",
+				type: "boolean",
+				read: true,
+				write: true
 			},
-			role: "text",
-			type: "boolean",
-			read: true,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".CO2", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of CO² in ppm.",
-				"de": "Tatsächlicher Sensorwert von CO2 in ppm.",
-				"ru": "Фактическое значение датчика CO2 в ppm.",
-				"pt": "Valor de sensor real de CO2 em ppm.",
-				"nl": "Actuele sensorwaarde van CO2 in ppm.",
-				"fr": "Valeur réelle du capteur de CO2 en ppm.",
-				"it": "Valore effettivo del sensore di CO2 in ppm.",
-				"es": "Valor sensor real de CO2 en ppm.",
-				"pl": "Wartość czujnika CO2 w ppm.",
-				"uk": "Фактичне значення датчика CO2 в ppm.",
-				"zh-cn": "CO2的实际传感器,ppm。."
+				name: {
+					"en": "Actual sensor value of CO² in ppm.",
+					"de": "Tatsächlicher Sensorwert von CO2 in ppm.",
+					"ru": "Фактическое значение датчика CO2 в ppm.",
+					"pt": "Valor de sensor real de CO2 em ppm.",
+					"nl": "Actuele sensorwaarde van CO2 in ppm.",
+					"fr": "Valeur réelle du capteur de CO2 en ppm.",
+					"it": "Valore effettivo del sensore di CO2 in ppm.",
+					"es": "Valor sensor real de CO2 en ppm.",
+					"pl": "Wartość czujnika CO2 w ppm.",
+					"uk": "Фактичне значення датчика CO2 в ppm.",
+					"zh-cn": "CO2的实际传感器,ppm。."
+				},
+				role: "text",
+				type: "number",
+				read: true,
+				write: true
 			},
-			role: "text",
-			type: "number",
-			read: true,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".Humidity", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of humidity",
-				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit",
-				"ru": "Фактическое значение датчика влажности",
-				"pt": "Valor do sensor real da umidade",
-				"nl": "Actuele sensorwaarde van vochtigheid",
-				"fr": "Valeur réelle du capteur d ' humidité",
-				"it": "Valore effettivo del sensore di umidità",
-				"es": "Valor sensor real de humedad",
-				"pl": "Aktualna wartość czujnika wilgotności",
-				"uk": "Фактичне значення датчика вологості",
-				"zh-cn": "湿度的实际传感"
+				name: {
+					"en": "Actual sensor value of humidity",
+					"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit",
+					"ru": "Фактическое значение датчика влажности",
+					"pt": "Valor do sensor real da umidade",
+					"nl": "Actuele sensorwaarde van vochtigheid",
+					"fr": "Valeur réelle du capteur d ' humidité",
+					"it": "Valore effettivo del sensore di umidità",
+					"es": "Valor sensor real de humedad",
+					"pl": "Aktualna wartość czujnika wilgotności",
+					"uk": "Фактичне значення датчика вологості",
+					"zh-cn": "湿度的实际传感"
+				},
+				role: "text",
+				type: "number",
+				read: true,
+				write: true
 			},
-			role: "text",
-			type: "number",
-			read: true,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".SleepTime", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Sleep Time",
-				"de": "Zeit für Schlafmodus",
-				"ru": "Время сна",
-				"pt": "Tempo de sono",
-				"nl": "Slaap",
-				"fr": "Temps de sommeil",
-				"it": "Tempo di sonno",
-				"es": "Hora de dormir",
-				"pl": "Sleep Time (ang.)",
-				"uk": "Час сну",
-				"zh-cn": "时间"
+				name: {
+					"en": "Sleep Time",
+					"de": "Zeit für Schlafmodus",
+					"ru": "Время сна",
+					"pt": "Tempo de sono",
+					"nl": "Slaap",
+					"fr": "Temps de sommeil",
+					"it": "Tempo di sonno",
+					"es": "Hora de dormir",
+					"pl": "Sleep Time (ang.)",
+					"uk": "Час сну",
+					"zh-cn": "时间"
+				},
+				role: "text",
+				type: "number",
+				min: 10,
+				max: 250,
+				read: true,
+				write: true
 			},
-			role: "text",
-			type: "number",
-			min: 10,
-			max: 250,
-			read: true,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".DeviceTime", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Device Time",
-				"de": "Zeit des Geräts",
-				"ru": "Время устройства",
-				"pt": "Tempo do dispositivo",
-				"nl": "Device Time",
-				"fr": "Heure",
-				"it": "Tempo del dispositivo",
-				"es": "Tiempo de dispositivo",
-				"pl": "Data czasu",
-				"uk": "Час пристрою",
-				"zh-cn": "时间"
+				name: {
+					"en": "Device Time",
+					"de": "Zeit des Geräts",
+					"ru": "Время устройства",
+					"pt": "Tempo do dispositivo",
+					"nl": "Device Time",
+					"fr": "Heure",
+					"it": "Tempo del dispositivo",
+					"es": "Tiempo de dispositivo",
+					"pl": "Data czasu",
+					"uk": "Час пристрою",
+					"zh-cn": "时间"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".DeviceDate", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Device Date",
-				"de": "Datum des Gerätes",
-				"ru": "Дата устройства",
-				"pt": "Data do dispositivo",
-				"nl": "Vertaling:",
-				"fr": "Date du dispositif",
-				"it": "Data del dispositivo",
-				"es": "Fecha del dispositivo",
-				"pl": "Device Date",
-				"uk": "Дата пристрою",
-				"zh-cn": "目 录"
+				name: {
+					"en": "Device Date",
+					"de": "Datum des Gerätes",
+					"ru": "Дата устройства",
+					"pt": "Data do dispositivo",
+					"nl": "Vertaling:",
+					"fr": "Date du dispositif",
+					"it": "Data del dispositivo",
+					"es": "Fecha del dispositivo",
+					"pl": "Device Date",
+					"uk": "Дата пристрою",
+					"zh-cn": "目 录"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Settings_General" + ".SummerMode", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Sommer modus",
-				"de": "Sommermodus",
-				"ru": "Sommer модус",
-				"pt": "Sommer modus",
-				"nl": "Sommer modus",
-				"fr": "Sommer modus",
-				"it": "Sommer modus",
-				"es": "Sommer modus",
-				"pl": "Sommer modus",
-				"uk": "Соммер модус",
-				"zh-cn": "中小企业"
+				name: {
+					"en": "Sommer modus",
+					"de": "Sommermodus",
+					"ru": "Sommer модус",
+					"pt": "Sommer modus",
+					"nl": "Sommer modus",
+					"fr": "Sommer modus",
+					"it": "Sommer modus",
+					"es": "Sommer modus",
+					"pl": "Sommer modus",
+					"uk": "Соммер модус",
+					"zh-cn": "中小企业"
+				},
+				role: "state",
+				type: "boolean",
+				read: true,
+				write: true
 			},
-			role: "state",
-			type: "boolean",
-			read: true,
-			write: true
-			},
-		native: {}
+			native: {}
 		});
 		const setResetFalse = false;
 		await this.setState("Gateway " + id + ".Settings_General" + ".FilterResetIntervall", {val: SettingsData.filter.maxRunTime, ack: true});
@@ -939,159 +939,159 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Telemetry",
-				"de": "Telemetrie",
-				"ru": "Телеметрия",
-				"pt": "Telemetria",
-				"nl": "Telemetrie",
-				"fr": "Télémétrie",
-				"it": "Telemetria",
-				"es": "Telemetría",
-				"pl": "Telemetria",
-				"uk": "Телеметрія",
-				"zh-cn": "电话测量"
+				name: {
+					"en": "Telemetry",
+					"de": "Telemetrie",
+					"ru": "Телеметрия",
+					"pt": "Telemetria",
+					"nl": "Telemetrie",
+					"fr": "Télémétrie",
+					"it": "Telemetria",
+					"es": "Telemetría",
+					"pl": "Telemetria",
+					"uk": "Телеметрія",
+					"zh-cn": "电话测量"
+				},
 			},
-		},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Remaining filter run time in days",
-				"de": "Rest Filterlaufzeit in Tagen",
-				"ru": "Оставшееся время запуска фильтра в днях",
-				"pt": "Permanecendo tempo de execução do filtro em dias",
-				"nl": "Weer filtertijd in dagen",
-				"fr": "Durée du filtre restante en jours",
-				"it": "Mantenere il tempo di funzionamento del filtro in giorni",
-				"es": "Permanecer el tiempo de funcionamiento del filtro en días",
-				"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
-				"uk": "Термін дії фільтра в день",
-				"zh-cn": "时间过长。"
+				name: {
+					"en": "Remaining filter run time in days",
+					"de": "Rest Filterlaufzeit in Tagen",
+					"ru": "Оставшееся время запуска фильтра в днях",
+					"pt": "Permanecendo tempo de execução do filtro em dias",
+					"nl": "Weer filtertijd in dagen",
+					"fr": "Durée du filtre restante en jours",
+					"it": "Mantenere il tempo di funzionamento del filtro in giorni",
+					"es": "Permanecer el tiempo de funcionamiento del filtro en días",
+					"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
+					"uk": "Термін дії фільтра в день",
+					"zh-cn": "时间过长。"
+				},
+				"role": "text",
+				"type": "number",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".CO2", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of CO² in ppm",
-				"de": "Tatsächlicher Sensorwert von CO2 in ppm",
-				"ru": "Фактическое значение датчика CO2 в ppm",
-				"pt": "Valor do sensor real de CO2 em ppm",
-				"nl": "Actuele sensorwaarde van CO2 in ppm",
-				"fr": "Valeur réelle du capteur de CO2 en ppm",
-				"it": "Valore effettivo del sensore di CO2 in ppm",
-				"es": "Valor sensor real de CO2 en ppm",
-				"pl": "Wartość czujnika CO2 w ppm",
-				"uk": "Фактичне значення датчика CO2 в ppm",
-				"zh-cn": "CO2的实际传感器,ppm"
+				name: {
+					"en": "Actual sensor value of CO² in ppm",
+					"de": "Tatsächlicher Sensorwert von CO2 in ppm",
+					"ru": "Фактическое значение датчика CO2 в ppm",
+					"pt": "Valor do sensor real de CO2 em ppm",
+					"nl": "Actuele sensorwaarde van CO2 in ppm",
+					"fr": "Valeur réelle du capteur de CO2 en ppm",
+					"it": "Valore effettivo del sensore di CO2 in ppm",
+					"es": "Valor sensor real de CO2 en ppm",
+					"pl": "Wartość czujnika CO2 w ppm",
+					"uk": "Фактичне значення датчика CO2 в ppm",
+					"zh-cn": "CO2的实际传感器,ppm"
+				},
+				"role": "text",
+				"type": "number",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".humidity", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of humidity in %",
-				"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit in %",
-				"ru": "Фактическое значение датчика влажности в %",
-				"pt": "Valor do sensor real da umidade em %",
-				"nl": "Actuele sensorwaarde van vochtigheid in %",
-				"fr": "Valeur réelle de l'humidité en %",
-				"it": "Valore effettivo del sensore di umidità in %",
-				"es": "Valor sensor real de humedad en %",
-				"pl": "Aktualna wartość czujnika wilgotności w %",
-				"uk": "Фактичне значення датчика вологості в %",
-				"zh-cn": "湿度的实际传感"
+				name: {
+					"en": "Actual sensor value of humidity in %",
+					"de": "Tatsächlicher Sensorwert der Luftfeuchtigkeit in %",
+					"ru": "Фактическое значение датчика влажности в %",
+					"pt": "Valor do sensor real da umidade em %",
+					"nl": "Actuele sensorwaarde van vochtigheid in %",
+					"fr": "Valeur réelle de l'humidité en %",
+					"it": "Valore effettivo del sensore di umidità in %",
+					"es": "Valor sensor real de humedad en %",
+					"pl": "Aktualna wartość czujnika wilgotności w %",
+					"uk": "Фактичне значення датчика вологості в %",
+					"zh-cn": "湿度的实际传感"
+				},
+				"role": "text",
+				"type": "number",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "number",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".tempInside", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of room temperature in °C",
-				"de": "Tatsächlicher Sensorwert der Raumtemperatur in °C",
-				"ru": "Фактическое значение датчика комнатной температуры в °C",
-				"pt": "Valor do sensor real da temperatura ambiente em °C",
-				"nl": "Actuele sensorwaarde van kamertemperatuur in het centrum",
-				"fr": "Valeur réelle de la température ambiante en °C",
-				"it": "Valore effettivo del sensore della temperatura ambiente in °C",
-				"es": "Valor sensor real de temperatura ambiente en °C",
-				"pl": "Wartość czujnika temperatury pomieszczeń w °C",
-				"uk": "Фактичне значення датчика температури приміщення в °C",
-				"zh-cn": "°C室温度的实际传感器"
+				name: {
+					"en": "Actual sensor value of room temperature in °C",
+					"de": "Tatsächlicher Sensorwert der Raumtemperatur in °C",
+					"ru": "Фактическое значение датчика комнатной температуры в °C",
+					"pt": "Valor do sensor real da temperatura ambiente em °C",
+					"nl": "Actuele sensorwaarde van kamertemperatuur in het centrum",
+					"fr": "Valeur réelle de la température ambiante en °C",
+					"it": "Valore effettivo del sensore della temperatura ambiente in °C",
+					"es": "Valor sensor real de temperatura ambiente en °C",
+					"pl": "Wartość czujnika temperatury pomieszczeń w °C",
+					"uk": "Фактичне значення датчика температури приміщення в °C",
+					"zh-cn": "°C室温度的实际传感器"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".tempOutside", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Actual sensor value of outside temperature in °C",
-				"de": "Ist-Sensorwert der Außentemperatur in °C",
-				"ru": "Фактическое значение датчика наружной температуры в °C",
-				"pt": "Valor do sensor real da temperatura exterior em °C",
-				"nl": "Actuele sensorwaarde van buitenste temperatuur in °C",
-				"fr": "Valeur réelle de la température extérieure en °C",
-				"it": "Valore effettivo del sensore della temperatura esterna in °C",
-				"es": "Valor sensor real de la temperatura exterior en °C",
-				"pl": "Wartość czujnika zewnętrznego w temperaturze °C",
-				"uk": "Фактичне значення датчика зовнішньої температури в °C",
-				"zh-cn": "°C外部温度的实际传感器"
+				name: {
+					"en": "Actual sensor value of outside temperature in °C",
+					"de": "Ist-Sensorwert der Außentemperatur in °C",
+					"ru": "Фактическое значение датчика наружной температуры в °C",
+					"pt": "Valor do sensor real da temperatura exterior em °C",
+					"nl": "Actuele sensorwaarde van buitenste temperatuur in °C",
+					"fr": "Valeur réelle de la température extérieure en °C",
+					"it": "Valore effettivo del sensore della temperatura esterna in °C",
+					"es": "Valor sensor real de la temperatura exterior en °C",
+					"pl": "Wartość czujnika zewnętrznego w temperaturze °C",
+					"uk": "Фактичне значення датчика зовнішньої температури в °C",
+					"zh-cn": "°C外部温度的实际传感器"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Info_Telemetry" + ".uptime", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Uptime of the SEC Smart system",
-				"de": "Bisherige Laufzeit des SEC Smart Systems",
-				"ru": "Uptime системы SEC Smart",
-				"pt": "Tempo de funcionamento do sistema SEC Smart",
-				"nl": "Quality over Quantity (QoQ) Releases Vertaling:",
-				"fr": "Temps de mise à jour du système intelligent SEC",
-				"it": "Tempo di avanzamento del sistema SEC Smart",
-				"es": "Tiempo de actualización del sistema SEC Smart",
-				"pl": "System SEC Smart",
-				"uk": "Час роботи системи SEC Smart",
-				"zh-cn": "ECSmart系统的时间"
+				name: {
+					"en": "Uptime of the SEC Smart system",
+					"de": "Bisherige Laufzeit des SEC Smart Systems",
+					"ru": "Uptime системы SEC Smart",
+					"pt": "Tempo de funcionamento do sistema SEC Smart",
+					"nl": "Quality over Quantity (QoQ) Releases Vertaling:",
+					"fr": "Temps de mise à jour du système intelligent SEC",
+					"it": "Tempo di avanzamento del sistema SEC Smart",
+					"es": "Tiempo de actualización del sistema SEC Smart",
+					"pl": "System SEC Smart",
+					"uk": "Час роботи системи SEC Smart",
+					"zh-cn": "ECSmart系统的时间"
+				},
+				"role": "text",
+				"type": "string",
+				"read": true,
+				"write": false
 			},
-			"role": "text",
-			"type": "string",
-			"read": true,
-			"write": false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setState("Gateway " + id + ".Info_Telemetry" + ".restFilterTime", {val: TelemetryData.restFilterTime, ack: true});
 		await this.setState("Gateway " + id + ".Info_Telemetry" + ".CO2", {val: TelemetryData.co2, ack: true});
@@ -1124,21 +1124,21 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Returns the device subobject setup for the URL-encoded device ID.",
-				"de": "Gibt den Geräte-Setup für die Geräte-ID zurück.",
-				"ru": "Возвращает установку подобъектов устройства для URL-кодированного устройства ID.",
-				"pt": "Retorna a configuração subobjeto do dispositivo para o ID do dispositivo codificado por URL.",
-				"nl": "Verwijdert het apparaat onderobject voor de URL-gecodeerde apparaat ID.",
-				"fr": "Renvoie la configuration de sous-objet de l'appareil pour l'ID de périphérique codé par URL.",
-				"it": "Restituisce la configurazione subobject del dispositivo per l'ID del dispositivo codificato dall'URL.",
-				"es": "Devuelve la configuración subobjeto del dispositivo para el ID del dispositivo codificado por URL.",
-				"pl": "Powraca podobiznę podobizną dla URL-encoded device ID.",
-				"uk": "Повертає налаштування підоб'єкта пристрою для ідентифікатора URL-кодованого пристрою.",
-				"zh-cn": "恢复化解装置的装置分包。."
-			}
+				name: {
+					"en": "Returns the device subobject setup for the URL-encoded device ID.",
+					"de": "Gibt den Geräte-Setup für die Geräte-ID zurück.",
+					"ru": "Возвращает установку подобъектов устройства для URL-кодированного устройства ID.",
+					"pt": "Retorna a configuração subobjeto do dispositivo para o ID do dispositivo codificado por URL.",
+					"nl": "Verwijdert het apparaat onderobject voor de URL-gecodeerde apparaat ID.",
+					"fr": "Renvoie la configuration de sous-objet de l'appareil pour l'ID de périphérique codé par URL.",
+					"it": "Restituisce la configurazione subobject del dispositivo per l'ID del dispositivo codificato dall'URL.",
+					"es": "Devuelve la configuración subobjeto del dispositivo para el ID del dispositivo codificado por URL.",
+					"pl": "Powraca podobiznę podobizną dla URL-encoded device ID.",
+					"uk": "Повертає налаштування підоб'єкта пристрою для ідентифікатора URL-кодованого пристрою.",
+					"zh-cn": "恢复化解装置的装置分包。."
+				}
 			},
-		native: {}
+			native: {}
 		});
 
 		const systemInfo = setupData.systems;
@@ -1152,71 +1152,71 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Set up the configuration for the digital input.",
-				"de": "Richten Sie die Konfiguration für den digitalen Eingang ein.",
-				"ru": "Настройте конфигурацию для цифрового входа.",
-				"pt": "Configure a configuração para a entrada digital.",
-				"nl": "Zet de configuratie op voor de digitale input.",
-				"fr": "Configuration de l'entrée numérique.",
-				"it": "Impostare la configurazione per l'ingresso digitale.",
-				"es": "Configurar la configuración para la entrada digital.",
-				"pl": "Ustanowić konfigurację wejściówki cyfrowej.",
-				"uk": "Налаштування цифрового входу.",
-				"zh-cn": "建立数字投入组合。."
-			}
+				name: {
+					"en": "Set up the configuration for the digital input.",
+					"de": "Richten Sie die Konfiguration für den digitalen Eingang ein.",
+					"ru": "Настройте конфигурацию для цифрового входа.",
+					"pt": "Configure a configuração para a entrada digital.",
+					"nl": "Zet de configuratie op voor de digitale input.",
+					"fr": "Configuration de l'entrée numérique.",
+					"it": "Impostare la configurazione per l'ingresso digitale.",
+					"es": "Configurar la configuración para la entrada digital.",
+					"pl": "Ustanowić konfigurację wejściówki cyfrowej.",
+					"uk": "Налаштування цифрового входу.",
+					"zh-cn": "建立数字投入组合。."
+				}
 			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi" + ".function", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Response when triggered by digital input",
-				"de": "Antwort beim Auslösen durch digitale Eingabe",
-				"ru": "Ответ при запуске цифрового входа",
-				"pt": "Resposta quando acionado por entrada digital",
-				"nl": "Verantwoording toen de digitale input",
-				"fr": "Réponse lorsque déclenchée par l'entrée numérique",
-				"it": "Risposta quando attivato da ingresso digitale",
-				"es": "Respuesta cuando se activa por entrada digital",
-				"pl": "Response kiedy sprowadza się wejściem cyfrowym",
-				"uk": "Відповідь при запуску цифрового введення",
-				"zh-cn": "数字投入引起的反应"
+				name: {
+					"en": "Response when triggered by digital input",
+					"de": "Antwort beim Auslösen durch digitale Eingabe",
+					"ru": "Ответ при запуске цифрового входа",
+					"pt": "Resposta quando acionado por entrada digital",
+					"nl": "Verantwoording toen de digitale input",
+					"fr": "Réponse lorsque déclenchée par l'entrée numérique",
+					"it": "Risposta quando attivato da ingresso digitale",
+					"es": "Respuesta cuando se activa por entrada digital",
+					"pl": "Response kiedy sprowadza się wejściem cyfrowym",
+					"uk": "Відповідь при запуску цифрового введення",
+					"zh-cn": "数字投入引起的反应"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
+					"None":"None",
+					"Set fan stage 0":"Set fan stage 0",
+					"Set fan stage 1":"Set fan stage 1",
+					"Set fan stage 2":"Set fan stage 2",
+					"Set fan stage 3":"Set fan stage 3",
+					"Set fan stage 4":"Set fan stage 4",
+					"Set fan stage 5":"Set fan stage 5",
+					"Set fan stage 6":"Set fan stage 6",
+					"Set boost ventilation":"Set boost ventilation",
+					"Set to snooze":"Set to snooze",
+					"Set to automatic timer":"",
+					"Set to CO2":"Set to CO2",
+					"Set to humidity":"Set to humidity",
+					"Reset filter":"Reset filter",
+					"Keep fan stage 0":"Keep fan stage 0",
+					"Keep fan stage 1":"Keep fan stage 1",
+					"Keep fan stage 2":"Keep fan stage 2",
+					"Keep fan stage 3":"Keep fan stage 3",
+					"Keep fan stage 4":"Keep fan stage 4",
+					"Keep fan stage 5":"Keep fan stage 5",
+					"Keep fan stage 6":"Keep fan stage 6",
+					"Keep boost ventilation":"Keep boost ventilation",
+					"Keep at automatic timer":"Keep at automatic timer",
+					"Keep at CO2":"Keep at CO2",
+					"Keep at humidity":"Keep at humidity"
+				}
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false,
-			states: {
-				"None":"None",
-				"Set fan stage 0":"Set fan stage 0",
-				"Set fan stage 1":"Set fan stage 1",
-				"Set fan stage 2":"Set fan stage 2",
-				"Set fan stage 3":"Set fan stage 3",
-				"Set fan stage 4":"Set fan stage 4",
-				"Set fan stage 5":"Set fan stage 5",
-				"Set fan stage 6":"Set fan stage 6",
-				"Set boost ventilation":"Set boost ventilation",
-				"Set to snooze":"Set to snooze",
-				"Set to automatic timer":"",
-				"Set to CO2":"Set to CO2",
-				"Set to humidity":"Set to humidity",
-				"Reset filter":"Reset filter",
-				"Keep fan stage 0":"Keep fan stage 0",
-				"Keep fan stage 1":"Keep fan stage 1",
-				"Keep fan stage 2":"Keep fan stage 2",
-				"Keep fan stage 3":"Keep fan stage 3",
-				"Keep fan stage 4":"Keep fan stage 4",
-				"Keep fan stage 5":"Keep fan stage 5",
-				"Keep fan stage 6":"Keep fan stage 6",
-				"Keep boost ventilation":"Keep boost ventilation",
-				"Keep at automatic timer":"Keep at automatic timer",
-				"Keep at CO2":"Keep at CO2",
-				"Keep at humidity":"Keep at humidity"
-			}
-			},
-		native: {}
+			native: {}
 		});
 		await this.setState("Gateway " + id + ".Setup_inputDi" + ".function", {val: setupData.inputDi.function, ack: true});
 
@@ -1227,63 +1227,63 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Set up the configuration for the digital output.",
-				"de": "Richten Sie die Konfiguration für den digitalen Ausgang ein.",
-				"ru": "Настройте конфигурацию для цифрового вывода.",
-				"pt": "Configure a configuração para a saída digital.",
-				"nl": "Zet de configuratie op voor de digitale uitput.",
-				"fr": "Configuration de la sortie numérique.",
-				"it": "Impostare la configurazione per l'output digitale.",
-				"es": "Configurar la configuración para la salida digital.",
-				"pl": "Ustanowić konfigurację cyfrowej produkcji.",
-				"uk": "Налаштування цифрового виходу.",
-				"zh-cn": "建立数字产出组合。."
-			}
-		},
-		native: {}
+				name: {
+					"en": "Set up the configuration for the digital output.",
+					"de": "Richten Sie die Konfiguration für den digitalen Ausgang ein.",
+					"ru": "Настройте конфигурацию для цифрового вывода.",
+					"pt": "Configure a configuração para a saída digital.",
+					"nl": "Zet de configuratie op voor de digitale uitput.",
+					"fr": "Configuration de la sortie numérique.",
+					"it": "Impostare la configurazione per l'output digitale.",
+					"es": "Configurar la configuración para la salida digital.",
+					"pl": "Ustanowić konfigurację cyfrowej produkcji.",
+					"uk": "Налаштування цифрового виходу.",
+					"zh-cn": "建立数字产出组合。."
+				}
+			},
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo" + ".function", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Response to signal via digital output",
-				"de": "Antwort auf das Signal über den digitalen Ausgang",
-				"ru": "Ответ на сигнал через цифровой выход",
-				"pt": "Resposta ao sinal via saída digital",
-				"nl": "Vertaling:",
-				"fr": "Réponse au signal via la sortie numérique",
-				"it": "Risposta al segnale tramite uscita digitale",
-				"es": "Respuesta a la señal mediante salida digital",
-				"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
-				"uk": "Відповідь на сигнал через цифровий вихід",
-				"zh-cn": "通过数字产出对信号的反应"
+				name: {
+					"en": "Response to signal via digital output",
+					"de": "Antwort auf das Signal über den digitalen Ausgang",
+					"ru": "Ответ на сигнал через цифровой выход",
+					"pt": "Resposta ao sinal via saída digital",
+					"nl": "Vertaling:",
+					"fr": "Réponse au signal via la sortie numérique",
+					"it": "Risposta al segnale tramite uscita digitale",
+					"es": "Respuesta a la señal mediante salida digital",
+					"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
+					"uk": "Відповідь на сигнал через цифровий вихід",
+					"zh-cn": "通过数字产出对信号的反应"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
+					"None":"None",
+					"Fan stage 0 active":"Fan stage 0 active",
+					"Fan stage 1 active":"Fan stage 1 active",
+					"Fan stage 2 active":"Fan stage 2 active",
+					"Fan stage 3 active":"Fan stage 3 active",
+					"Fan stage 4 active":"Fan stage 4 active",
+					"Fan stage 5 active":"Fan stage 5 active",
+					"Fan stage 6 active":"Fan stage 6 active",
+					"Boost ventilation active":"Boost ventilation active",
+					"Snooze mode active":"Snooze mode active",
+					"All areas fan stage 0":"All areas fan stage 0",
+					"Automatic timer active":"Automatic timer active",
+					"CO2 active":"CO2 active",
+					"Humidity active":"Humidity active",
+					"Filter exhausted":"Filter exhausted",
+					"General message":"General message",
+					"General error":"General error"
+				}
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false,
-			states: {
-				"None":"None",
-				"Fan stage 0 active":"Fan stage 0 active",
-				"Fan stage 1 active":"Fan stage 1 active",
-				"Fan stage 2 active":"Fan stage 2 active",
-				"Fan stage 3 active":"Fan stage 3 active",
-				"Fan stage 4 active":"Fan stage 4 active",
-				"Fan stage 5 active":"Fan stage 5 active",
-				"Fan stage 6 active":"Fan stage 6 active",
-				"Boost ventilation active":"Boost ventilation active",
-				"Snooze mode active":"Snooze mode active",
-				"All areas fan stage 0":"All areas fan stage 0",
-				"Automatic timer active":"Automatic timer active",
-				"CO2 active":"CO2 active",
-				"Humidity active":"Humidity active",
-				"Filter exhausted":"Filter exhausted",
-				"General message":"General message",
-				"General error":"General error"
-			}
-			},
-		native: {}
+			native: {}
 		});
 		await this.setState("Gateway " + id + ".Setup_outputDo" + ".function", {val: setupData.outputDo.function, ack: true});
 		const areaDigitalOutput = setupData.outputDo.areas;
@@ -1294,329 +1294,329 @@ class SecSmart extends utils.Adapter {
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi", {
 			type: "channel",
 			common: {
-			name: {
-				"en": "Set up the configuration for the analog input.",
-				"de": "Richten Sie die Konfiguration für den analogen Eingang ein.",
-				"ru": "Настройте конфигурацию для аналогового входа.",
-				"pt": "Configure a configuração para a entrada analógica.",
-				"nl": "Zet de configuratie op voor de analog input.",
-				"fr": "Configuration de l'entrée analogique.",
-				"it": "Impostare la configurazione per l'ingresso analogico.",
-				"es": "Configurar la configuración para la entrada analógica.",
-				"pl": "Ustanowić konfigurację dla sygnału analogowego.",
-				"uk": "Встановити конфігурацію для аналогового введення.",
-				"zh-cn": "设立类似投入的组合。."
-			}
-		},
-		native: {}
+				name: {
+					"en": "Set up the configuration for the analog input.",
+					"de": "Richten Sie die Konfiguration für den analogen Eingang ein.",
+					"ru": "Настройте конфигурацию для аналогового входа.",
+					"pt": "Configure a configuração para a entrada analógica.",
+					"nl": "Zet de configuratie op voor de analog input.",
+					"fr": "Configuration de l'entrée analogique.",
+					"it": "Impostare la configurazione per l'ingresso analogico.",
+					"es": "Configurar la configuración para la entrada analógica.",
+					"pl": "Ustanowić konfigurację dla sygnału analogowego.",
+					"uk": "Встановити конфігурацію для аналогового введення.",
+					"zh-cn": "设立类似投入的组合。."
+				}
+			},
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".function", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Response to signal via digital output",
-				"de": "Antwort auf das Signal über den digitalen Ausgang",
-				"ru": "Ответ на сигнал через цифровой выход",
-				"pt": "Resposta ao sinal via saída digital",
-				"nl": "Vertaling:",
-				"fr": "Réponse au signal via la sortie numérique",
-				"it": "Risposta al segnale tramite uscita digitale",
-				"es": "Respuesta a la señal mediante salida digital",
-				"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
-				"uk": "Відповідь на сигнал через цифровий вихід",
-				"zh-cn": "通过数字产出对信号的反应"
+				name: {
+					"en": "Response to signal via digital output",
+					"de": "Antwort auf das Signal über den digitalen Ausgang",
+					"ru": "Ответ на сигнал через цифровой выход",
+					"pt": "Resposta ao sinal via saída digital",
+					"nl": "Vertaling:",
+					"fr": "Réponse au signal via la sortie numérique",
+					"it": "Risposta al segnale tramite uscita digitale",
+					"es": "Respuesta a la señal mediante salida digital",
+					"pl": "Odpowiedzi do sygnału za pośrednictwem cyfrowej produkcji",
+					"uk": "Відповідь на сигнал через цифровий вихід",
+					"zh-cn": "通过数字产出对信号的反应"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
+					"None":"None",
+					"Fan stage":"Fan stage",
+					"Humidity":"Humidity",
+					"CO2":"CO2",
+					"Ti":"Ti",
+					"Ta":"Ta"
+				}
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false,
-			states: {
-				"None":"None",
-				"Fan stage":"Fan stage",
-				"Humidity":"Humidity",
-				"CO2":"CO2",
-				"Ti":"Ti",
-				"Ta":"Ta"
-			}
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".functionType", {
 			type: "state",
 			common: {
-			name: {
-				"en": "function type",
-				"de": "Funktionart",
-				"ru": "тип функции",
-				"pt": "tipo de função",
-				"nl": "functionerend type",
-				"fr": "type de fonction",
-				"it": "tipo di funzione",
-				"es": "tipo de función",
-				"pl": "typename",
-				"uk": "тип функції",
-				"zh-cn": "功能类型"
+				name: {
+					"en": "function type",
+					"de": "Funktionart",
+					"ru": "тип функции",
+					"pt": "tipo de função",
+					"nl": "functionerend type",
+					"fr": "type de fonction",
+					"it": "tipo di funzione",
+					"es": "tipo de función",
+					"pl": "typename",
+					"uk": "тип функції",
+					"zh-cn": "功能类型"
+				},
+				role: "text",
+				type: "string",
+				read: true,
+				write: false,
+				states: {
+					"0-10 V":"0-10 V",
+					"4-20 mA":"4-20 mA"
+				}
 			},
-			role: "text",
-			type: "string",
-			read: true,
-			write: false,
-			states: {
-				"0-10 V":"0-10 V",
-				"4-20 mA":"4-20 mA"
-			}
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_lower", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Analog input value in % for the lower setpoint",
-				"de": "Analoger Eingangswert in % für den unteren Sollwert",
-				"ru": "Аналоговая входная стоимость в % для нижней точки",
-				"pt": "Valor de entrada analógico em % para o setpoint inferior",
-				"nl": "Analog input waarde in % voor de lagere instelling",
-				"fr": "Valeur d'entrée analogique en % pour le paramètre inférieur",
-				"it": "Valore di ingresso analogico in % per il setpoint inferiore",
-				"es": "Valor de entrada analógico en % para el punto inferior",
-				"pl": "Analog wejściowy w % dla niższych punktów końcowych",
-				"uk": "Значення аналогового введення в % для нижньої точки",
-				"zh-cn": "低定点投入值"
+				name: {
+					"en": "Analog input value in % for the lower setpoint",
+					"de": "Analoger Eingangswert in % für den unteren Sollwert",
+					"ru": "Аналоговая входная стоимость в % для нижней точки",
+					"pt": "Valor de entrada analógico em % para o setpoint inferior",
+					"nl": "Analog input waarde in % voor de lagere instelling",
+					"fr": "Valeur d'entrée analogique en % pour le paramètre inférieur",
+					"it": "Valore di ingresso analogico in % per il setpoint inferiore",
+					"es": "Valor de entrada analógico en % para el punto inferior",
+					"pl": "Analog wejściowy w % dla niższych punktów końcowych",
+					"uk": "Значення аналогового введення в % для нижньої точки",
+					"zh-cn": "低定点投入值"
+				},
+				role: "text",
+				type: "number",
+				min: 0,
+				max: 50,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 0,
-			max: 50,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_x_upper", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Analog input value in % for the upper setpoint",
-				"de": "Analoger Eingangswert in % für den oberen Sollwert",
-				"ru": "Аналоговая входная стоимость в % для верхней точки",
-				"pt": "Valor de entrada analógico em % para o setpoint superior",
-				"nl": "Analog input waarde in % voor de upper setpoint",
-				"fr": "Valeur d'entrée analogique en % pour le paramètre supérieur",
-				"it": "Valore di ingresso analogico in % per il setpoint superiore",
-				"es": "Valor de entrada analógico en % para el punto superior",
-				"pl": "Analog wejściowy % dla górnego punktu startowego",
-				"uk": "Значення аналогового введення в % для верхньої точки",
-				"zh-cn": "高点投入值"
+				name: {
+					"en": "Analog input value in % for the upper setpoint",
+					"de": "Analoger Eingangswert in % für den oberen Sollwert",
+					"ru": "Аналоговая входная стоимость в % для верхней точки",
+					"pt": "Valor de entrada analógico em % para o setpoint superior",
+					"nl": "Analog input waarde in % voor de upper setpoint",
+					"fr": "Valeur d'entrée analogique en % pour le paramètre supérieur",
+					"it": "Valore di ingresso analogico in % per il setpoint superiore",
+					"es": "Valor de entrada analógico en % para el punto superior",
+					"pl": "Analog wejściowy % dla górnego punktu startowego",
+					"uk": "Значення аналогового введення в % для верхньої точки",
+					"zh-cn": "高点投入值"
+				},
+				role: "text",
+				type: "number",
+				min: 50,
+				max: 100,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 50,
-			max: 100,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_lower", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Fanlevel to apply at lower setpoint",
-				"de": "Fanlevel zur Anwendung im unteren Sollwert",
-				"ru": "Fanlevel для подачи заявки на более низкую точку",
-				"pt": "Nível de ventilador para aplicar em setpoint inferior",
-				"nl": "Fanlevel om te solliciteren op lagere set",
-				"fr": "Fanlevel to apply at lower setpoint",
-				"it": "Livello di ventilatore da applicare al punto più basso",
-				"es": "Nivel de abanico para aplicar en el punto inferior",
-				"pl": "Fanpozycja na niższym zbiorze",
-				"uk": "Вентилятор для застосування в нижньому точках",
-				"zh-cn": "低级申请"
+				name: {
+					"en": "Fanlevel to apply at lower setpoint",
+					"de": "Fanlevel zur Anwendung im unteren Sollwert",
+					"ru": "Fanlevel для подачи заявки на более низкую точку",
+					"pt": "Nível de ventilador para aplicar em setpoint inferior",
+					"nl": "Fanlevel om te solliciteren op lagere set",
+					"fr": "Fanlevel to apply at lower setpoint",
+					"it": "Livello di ventilatore da applicare al punto più basso",
+					"es": "Nivel de abanico para aplicar en el punto inferior",
+					"pl": "Fanpozycja na niższym zbiorze",
+					"uk": "Вентилятор для застосування в нижньому точках",
+					"zh-cn": "低级申请"
+				},
+				role: "text",
+				type: "number",
+				min: 0,
+				max: 3,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 0,
-			max: 3,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yFanLevel_upper", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Fanlevel to apply at upper setpoint",
-				"de": "Fanlevel zur Anwendung im oberen Sollwert",
-				"ru": "Fanlevel для подачи заявки на верхней точке",
-				"pt": "Nível de ventilador para aplicar no setpoint superior",
-				"nl": "Fanlevel om zich te melden bij Upper setpoint",
-				"fr": "Fanlevel to apply at upper setpoint",
-				"it": "Livello di ventilatore da applicare al punto superiore",
-				"es": "Nivel de abanico para aplicar en el punto superior",
-				"pl": "Fanpozycja na górnym zbiorze",
-				"uk": "Вентилятор для застосування в верхній точці",
-				"zh-cn": "申请上级"
+				name: {
+					"en": "Fanlevel to apply at upper setpoint",
+					"de": "Fanlevel zur Anwendung im oberen Sollwert",
+					"ru": "Fanlevel для подачи заявки на верхней точке",
+					"pt": "Nível de ventilador para aplicar no setpoint superior",
+					"nl": "Fanlevel om zich te melden bij Upper setpoint",
+					"fr": "Fanlevel to apply at upper setpoint",
+					"it": "Livello di ventilatore da applicare al punto superiore",
+					"es": "Nivel de abanico para aplicar en el punto superior",
+					"pl": "Fanpozycja na górnym zbiorze",
+					"uk": "Вентилятор для застосування в верхній точці",
+					"zh-cn": "申请上级"
+				},
+				role: "text",
+				type: "number",
+				min: 3,
+				max: 6,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 3,
-			max: 6,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_lower", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Humidity value in % for humidity regulation mode to apply at lower setpoint",
-				"de": "Luftfeuchtigkeitswert in % für Feuchtigkeitsregulierungsmodus auf niedrigerem Sollwert",
-				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на более низкой точке",
-				"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar-se no ponto de ajuste inferior",
-				"nl": "Humidity waarde in % voor nederigheidsregeling om te solliciteren op lagere set",
-				"fr": "Valeur d ' humidité en % pour le mode de régulation de l ' humidité à appliquer à un point inférieur",
-				"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto più basso",
-				"es": "Valor de humedad en % para el modo de regulación de humedad para aplicar en el punto inferior",
-				"pl": "Wartość w trybie wilgotności w trybie regulacji wilgotności w temperaturze % w trybie regulacji wilgotności do stosowania w niższych wartościach ustawodawczych",
-				"uk": "Значення вологості в % для режиму регулювання вологості для застосування при нижчій точковій точці",
-				"zh-cn": "湿度管理模式的50%的湿度"
+				name: {
+					"en": "Humidity value in % for humidity regulation mode to apply at lower setpoint",
+					"de": "Luftfeuchtigkeitswert in % für Feuchtigkeitsregulierungsmodus auf niedrigerem Sollwert",
+					"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на более низкой точке",
+					"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar-se no ponto de ajuste inferior",
+					"nl": "Humidity waarde in % voor nederigheidsregeling om te solliciteren op lagere set",
+					"fr": "Valeur d ' humidité en % pour le mode de régulation de l ' humidité à appliquer à un point inférieur",
+					"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto più basso",
+					"es": "Valor de humedad en % para el modo de regulación de humedad para aplicar en el punto inferior",
+					"pl": "Wartość w trybie wilgotności w trybie regulacji wilgotności w temperaturze % w trybie regulacji wilgotności do stosowania w niższych wartościach ustawodawczych",
+					"uk": "Значення вологості в % для режиму регулювання вологості для застосування при нижчій точковій точці",
+					"zh-cn": "湿度管理模式的50%的湿度"
+				},
+				role: "text",
+				type: "number",
+				min: 0,
+				max: 50,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 0,
-			max: 50,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yHumidity_upper", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Humidity value in % for humidity regulation mode to apply at upper setpoint",
-				"de": "Feuchtewert in % für Feuchteregelungsart, die sich auf den oberen Sollwert bezieht",
-				"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на верхней точке",
-				"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar no ponto de ajuste superior",
-				"nl": "Humiditeitswaarde in % voor nederigheidsregeling om toe te passen bij het opstellen van",
-				"fr": "Valeur de l ' humidité en % pour le mode de régulation de l ' humidité à appliquer au niveau supérieur",
-				"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto superiore",
-				"es": "Valor de humedad en % para el modo regulación de humedad para aplicar en el punto superior",
-				"pl": "Wartość w % dla regulacji wilgotności w trybie regulacji wilgotności dostosowuje się w górnym punkcie setpoint",
-				"uk": "Значення вологості в % для режиму регулювання вологості наносити на верхню точку",
-				"zh-cn": "湿度管理模式的50%的湿度"
+				name: {
+					"en": "Humidity value in % for humidity regulation mode to apply at upper setpoint",
+					"de": "Feuchtewert in % für Feuchteregelungsart, die sich auf den oberen Sollwert bezieht",
+					"ru": "Значение влажности в % для режима регулирования влажности, чтобы применить на верхней точке",
+					"pt": "Valor da umidade em % para o modo de regulação da umidade aplicar no ponto de ajuste superior",
+					"nl": "Humiditeitswaarde in % voor nederigheidsregeling om toe te passen bij het opstellen van",
+					"fr": "Valeur de l ' humidité en % pour le mode de régulation de l ' humidité à appliquer au niveau supérieur",
+					"it": "Valore di umidità in % per la modalità di regolazione dell'umidità da applicare al punto superiore",
+					"es": "Valor de humedad en % para el modo regulación de humedad para aplicar en el punto superior",
+					"pl": "Wartość w % dla regulacji wilgotności w trybie regulacji wilgotności dostosowuje się w górnym punkcie setpoint",
+					"uk": "Значення вологості в % для режиму регулювання вологості наносити на верхню точку",
+					"zh-cn": "湿度管理模式的50%的湿度"
+				},
+				role: "text",
+				type: "number",
+				min: 50,
+				max: 100,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 50,
-			max: 100,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_lower", {
 			type: "state",
 			common: {
-			name: {
-				"en": "CO² value in ppm for CO² regulation mode to apply at lower setpoint",
-				"de": "CO2-Wert in ppm für CO2-Regelungsmodus auf niedrigeren Sollwert",
-				"ru": "Значение CO2 в ppm для режима регулирования CO2 для применения на более низкой точке",
-				"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar em setpoint inferior",
-				"nl": "CO2 waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op lagere set",
-				"fr": "Valeur CO2 en ppm pour le mode de régulation CO2 à appliquer à un point de réglage inférieur",
-				"it": "Valore di CO2 in ppm per la modalità di regolazione CO2 da applicare al punto più basso",
-				"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en punto inferior",
-				"pl": "Wartość CO2 w trybie regulacji CO2",
-				"uk": "CO2 значення в ppm для режиму регулювання CO2 на нижню точку",
-				"zh-cn": "CO2 条例模式ppm中的CO2价值"
+				name: {
+					"en": "CO² value in ppm for CO² regulation mode to apply at lower setpoint",
+					"de": "CO2-Wert in ppm für CO2-Regelungsmodus auf niedrigeren Sollwert",
+					"ru": "Значение CO2 в ppm для режима регулирования CO2 для применения на более низкой точке",
+					"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar em setpoint inferior",
+					"nl": "CO2 waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op lagere set",
+					"fr": "Valeur CO2 en ppm pour le mode de régulation CO2 à appliquer à un point de réglage inférieur",
+					"it": "Valore di CO2 in ppm per la modalità di regolazione CO2 da applicare al punto più basso",
+					"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en punto inferior",
+					"pl": "Wartość CO2 w trybie regulacji CO2",
+					"uk": "CO2 значення в ppm для режиму регулювання CO2 на нижню точку",
+					"zh-cn": "CO2 条例模式ppm中的CO2价值"
+				},
+				role: "text",
+				type: "number",
+				min: 0,
+				max: 1500,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 0,
-			max: 1500,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yCo2_upper", {
 			type: "state",
 			common: {
-			name: {
-				"en": "CO² value in ppm for CO² regulation mode to apply at upper setpoint",
-				"de": "CO2 -Wert in ppm für CO2 -Regelungsmodus für den oberen Sollwert",
-				"ru": "Значение CO2 в ppm для режима регулирования CO2, чтобы применить на верхней точке",
-				"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar no setpoint superior",
-				"nl": "CO2-waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op het hoogste punt",
-				"fr": "Valeur CO2 en ppm pour le mode de régulation du CO2 à appliquer au point de réglage supérieur",
-				"it": "Valore di CO2 in ppm per la modalità di regolazione di CO2 da applicare al punto più alto",
-				"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en el punto superior",
-				"pl": "Wartość CO2 w trybie regulacji CO2",
-				"uk": "CO2 значення в ppm для режиму регулювання CO2, щоб застосувати в верхній частині",
-				"zh-cn": "CO2 公司2条例模式ppm中的CO2价值"
+				name: {
+					"en": "CO² value in ppm for CO² regulation mode to apply at upper setpoint",
+					"de": "CO2 -Wert in ppm für CO2 -Regelungsmodus für den oberen Sollwert",
+					"ru": "Значение CO2 в ppm для режима регулирования CO2, чтобы применить на верхней точке",
+					"pt": "Valor de CO2 em ppm para o modo de regulação de CO2 para aplicar no setpoint superior",
+					"nl": "CO2-waarde in ppm voor CO2 regelgevingsmodus om te solliciteren op het hoogste punt",
+					"fr": "Valeur CO2 en ppm pour le mode de régulation du CO2 à appliquer au point de réglage supérieur",
+					"it": "Valore di CO2 in ppm per la modalità di regolazione di CO2 da applicare al punto più alto",
+					"es": "Valor de CO2 en ppm para el modo de regulación de CO2 para aplicar en el punto superior",
+					"pl": "Wartość CO2 w trybie regulacji CO2",
+					"uk": "CO2 значення в ppm для режиму регулювання CO2, щоб застосувати в верхній частині",
+					"zh-cn": "CO2 公司2条例模式ppm中的CO2价值"
+				},
+				role: "text",
+				type: "number",
+				min: 1500,
+				max: 5000,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 1500,
-			max: 5000,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_lower", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Lower setpoint in °C for linear curve when used for an analog temperature sensor",
-				"de": "Unterer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
-				"ru": "Более низкая установка в °C для линейной кривой при использовании для аналогового датчика температуры",
-				"pt": "Setpoint inferior em °C para curva linear quando usado para um sensor de temperatura analógico",
-				"nl": "Lower setpoint in therci for lineaire curve wanneer gebruikt voor een analogische temperatuursensor",
-				"fr": "Réglage inférieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
-				"it": "Setpoint inferiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
-				"es": "Punto de ajuste inferior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
-				"pl": "Dolny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
-				"uk": "Нижня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
-				"zh-cn": "使用模拟温度传感器的蒸气曲线的°C"
+				name: {
+					"en": "Lower setpoint in °C for linear curve when used for an analog temperature sensor",
+					"de": "Unterer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
+					"ru": "Более низкая установка в °C для линейной кривой при использовании для аналогового датчика температуры",
+					"pt": "Setpoint inferior em °C para curva linear quando usado para um sensor de temperatura analógico",
+					"nl": "Lower setpoint in therci for lineaire curve wanneer gebruikt voor een analogische temperatuursensor",
+					"fr": "Réglage inférieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
+					"it": "Setpoint inferiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
+					"es": "Punto de ajuste inferior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
+					"pl": "Dolny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
+					"uk": "Нижня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
+					"zh-cn": "使用模拟温度传感器的蒸气曲线的°C"
+				},
+				role: "text",
+				type: "number",
+				min: -50,
+				max: 0,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: -50,
-			max: 0,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".curvePara_yTemp_upper", {
 			type: "state",
 			common: {
-			name: {
-				"en": "Upper setpoint in °C for linear curve when used for an analog temperature sensor",
-				"de": "Oberer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
-				"ru": "Верхняя установка в °C для линейной кривой при использовании для аналогового датчика температуры",
-				"pt": "Ponto de ajuste superior em °C para curva linear quando usado para um sensor de temperatura analógico",
-				"nl": "Upper setpoint in theologie voor lineaire curve als gebruikt voor een analogische temperatuursensor",
-				"fr": "Réglage supérieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
-				"it": "Setpoint superiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
-				"es": "Punto superior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
-				"pl": "Górny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
-				"uk": "Верхня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
-				"zh-cn": "使用模拟温度传感器的线曲线上级点"
+				name: {
+					"en": "Upper setpoint in °C for linear curve when used for an analog temperature sensor",
+					"de": "Oberer Sollwert in °C für lineare Kurve bei Verwendung eines analogen Temperatursensors",
+					"ru": "Верхняя установка в °C для линейной кривой при использовании для аналогового датчика температуры",
+					"pt": "Ponto de ajuste superior em °C para curva linear quando usado para um sensor de temperatura analógico",
+					"nl": "Upper setpoint in theologie voor lineaire curve als gebruikt voor een analogische temperatuursensor",
+					"fr": "Réglage supérieur en °C pour courbe linéaire lorsqu ' il est utilisé pour un capteur de température analogique",
+					"it": "Setpoint superiore in °C per curva lineare quando utilizzato per un sensore di temperatura analogico",
+					"es": "Punto superior en °C para curva lineal cuando se utiliza para un sensor de temperatura analógica",
+					"pl": "Górny punkt startowy w °C dla krzywej liniowej przy użyciu analogowego czujnika temperatury",
+					"uk": "Верхня точка встановлення в °C для лінійної кривої при використанні для аналогового датчика температури",
+					"zh-cn": "使用模拟温度传感器的线曲线上级点"
+				},
+				role: "text",
+				type: "number",
+				min: 0,
+				max: 50,
+				read: true,
+				write: false
 			},
-			role: "text",
-			type: "number",
-			min: 0,
-			max: 50,
-			read: true,
-			write: false
-			},
-		native: {}
+			native: {}
 		});
 		await this.setState("Gateway " + id + ".Setup_inputAi" + ".function", {val: setupData.inputAi.function, ack: true});
 		await this.setState("Gateway " + id + ".Setup_inputAi" + ".functionType", {val: setupData.inputAi.functionType, ack: true});
@@ -1642,62 +1642,62 @@ class SecSmart extends utils.Adapter {
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {
 				type: "state",
 				common: {
-				name: {
-					"en": "Remaining filter run time in days",
-					"de": "Rest Filterlaufzeit in Tagen",
-					"ru": "Оставшееся время запуска фильтра в днях",
-					"pt": "Permanecendo tempo de execução do filtro em dias",
-					"nl": "Weer filtertijd in dagen",
-					"fr": "Durée du filtre restante en jours",
-					"it": "Mantenere il tempo di funzionamento del filtro in giorni",
-					"es": "Permanecer el tiempo de funcionamiento del filtro en días",
-					"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
-					"uk": "Термін дії фільтра в день",
-					"zh-cn": "时间过长。"
+					name: {
+						"en": "Remaining filter run time in days",
+						"de": "Rest Filterlaufzeit in Tagen",
+						"ru": "Оставшееся время запуска фильтра в днях",
+						"pt": "Permanecendo tempo de execução do filtro em dias",
+						"nl": "Weer filtertijd in dagen",
+						"fr": "Durée du filtre restante en jours",
+						"it": "Mantenere il tempo di funzionamento del filtro in giorni",
+						"es": "Permanecer el tiempo de funcionamiento del filtro en días",
+						"pl": "Zmniejszenie filtra trwa w ciągu kilku dni",
+						"uk": "Термін дії фільтра в день",
+						"zh-cn": "时间过长。"
+					},
+					role: "text",
+					type: "string",
+					read: true,
+					write: false,
+					states: {
+						"None":"None",
+						"SEVi160":"SEVi160",
+						"SEVi200":"SEVi200",
+						"SEVi160D Mini Exhaust":"SEVi160D Mini Exhaust",
+						"SEVi160D Mini":"SEVi160D Mini",
+						"SEVi160 S":"SEVi160 S",
+						"SEVi160 Eco":"SEVi160 Eco",
+						"SEVi160 PRO-S":"SEVi160 PRO-S",
+						"SEVi160 PRO-ECO":"SEVi160 PRO-ECO",
+						"SEVi160D Mini PRO Exh":"SEVi160D Mini PRO Exh",
+						"SEVi160D Mini PRO":"SEVi160D Mini PRO",
+						"Configurable Device":"Configurable Device",
+					}
 				},
-				role: "text",
-				type: "string",
-				read: true,
-				write: false,
-				states: {
-					"None":"None",
-					"SEVi160":"SEVi160",
-					"SEVi200":"SEVi200",
-					"SEVi160D Mini Exhaust":"SEVi160D Mini Exhaust",
-					"SEVi160D Mini":"SEVi160D Mini",
-					"SEVi160 S":"SEVi160 S",
-					"SEVi160 Eco":"SEVi160 Eco",
-					"SEVi160 PRO-S":"SEVi160 PRO-S",
-					"SEVi160 PRO-ECO":"SEVi160 PRO-ECO",
-					"SEVi160D Mini PRO Exh":"SEVi160D Mini PRO Exh",
-					"SEVi160D Mini PRO":"SEVi160D Mini PRO",
-					"Configurable Device":"Configurable Device",
-				}
-				},
-		native: {}
+				native: {}
 			});
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {
 				type: "state",
-			common: {
-			name: {
-					"en": "installed in area",
-					"de": "installiert im Bereich",
-					"ru": "установленный в зоне",
-					"pt": "instalado na área",
-					"nl": "geïnstalleerd in de buurt",
-					"fr": "installé dans la zone",
-					"it": "installato in area",
-					"es": "instalado en la zona",
-					"pl": "zainstalowany na obszarze",
-					"uk": "встановлена в зоні",
-					"zh-cn": "在该地区安装"
+				common: {
+					name: {
+							"en": "installed in area",
+							"de": "installiert im Bereich",
+							"ru": "установленный в зоне",
+							"pt": "instalado na área",
+							"nl": "geïnstalleerd in de buurt",
+							"fr": "installé dans la zone",
+							"it": "installato in area",
+							"es": "instalado en la zona",
+							"pl": "zainstalowany na obszarze",
+							"uk": "встановлена в зоні",
+							"zh-cn": "在该地区安装"
+						},
+						role: "text",
+						type: "string",
+						read: true,
+						write: false
 				},
-				role: "text",
-				type: "string",
-				read: true,
-				write: false
-				},
-		native: {}
+				native: {}
 			});
 			await this.setState("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_type", {val: data.type, ack: true});
 			await this.setState("Gateway " + id + ".Setup_fans" + ".system" + systemId + "_installedOnArea", {val: data.installed, ack: true});
@@ -1711,30 +1711,30 @@ class SecSmart extends utils.Adapter {
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_fans" + ".area" + areaId, {
 				type: "state",
 				common: {
-				name: {
-					"en": "Function of the fan per area",
-					"de": "Funktion des Lüfters pro Bereich",
-					"ru": "Функция вентилятора на зону",
-					"pt": "Função do ventilador por área",
-					"nl": "Vertaling:",
-					"fr": "Fonction du ventilateur par zone",
-					"it": "Funzione del ventilatore per area",
-					"es": "Función del ventilador por área",
-					"pl": "Function of the fan per area (ang.)",
-					"uk": "Функції вентилятора на область",
-					"zh-cn": "B. 每一地区狂热的功能"
+					name: {
+						"en": "Function of the fan per area",
+						"de": "Funktion des Lüfters pro Bereich",
+						"ru": "Функция вентилятора на зону",
+						"pt": "Função do ventilador por área",
+						"nl": "Vertaling:",
+						"fr": "Fonction du ventilateur par zone",
+						"it": "Funzione del ventilatore per area",
+						"es": "Función del ventilador por área",
+						"pl": "Function of the fan per area (ang.)",
+						"uk": "Функції вентилятора на область",
+						"zh-cn": "B. 每一地区狂热的功能"
+					},
+					role: "text",
+					type: "string",
+					read: true,
+					write: false,
+					states: {
+						"Supply and exhaust air":"Supply and exhaust air",
+						"Only supply air":"Only supply air",
+						"Only exhaust air":"Only exhaust air",
+					}
 				},
-				role: "text",
-				type: "string",
-				read: true,
-				write: false,
-				states: {
-					"Supply and exhaust air":"Supply and exhaust air",
-					"Only supply air":"Only supply air",
-					"Only exhaust air":"Only exhaust air",
-				}
-				},
-		native: {}
+				native: {}
 			});
 			await this.setState("Gateway " + id + ".Setup_fans" + ".area" + areaId, {val: data, ack: true});
 		} catch (err) {
@@ -1747,25 +1747,25 @@ class SecSmart extends utils.Adapter {
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {
 				type: "state",
 				common: {
-				name: {
-					"en": "Allocation of a digital input signal to an area",
-					"de": "Zuordnung eines digitalen Eingangssignals zu einem Bereich",
-					"ru": "Распределение цифрового входного сигнала в зону",
-					"pt": "Alocação de um sinal de entrada digital para uma área",
-					"nl": "Vertaling:",
-					"fr": "Allocation d'un signal d'entrée numérique à une zone",
-					"it": "Distribuzione di un segnale di ingresso digitale in un'area",
-					"es": "Asignación de una señal de entrada digital a un área",
-					"pl": "Przydzielanie sygnału wejściowego do obszaru",
-					"uk": "Розміщення цифрового сигналу в область",
-					"zh-cn": "向一个地区分配数字投入信号"
+					name: {
+						"en": "Allocation of a digital input signal to an area",
+						"de": "Zuordnung eines digitalen Eingangssignals zu einem Bereich",
+						"ru": "Распределение цифрового входного сигнала в зону",
+						"pt": "Alocação de um sinal de entrada digital para uma área",
+						"nl": "Vertaling:",
+						"fr": "Allocation d'un signal d'entrée numérique à une zone",
+						"it": "Distribuzione di un segnale di ingresso digitale in un'area",
+						"es": "Asignación de una señal de entrada digital a un área",
+						"pl": "Przydzielanie sygnału wejściowego do obszaru",
+						"uk": "Розміщення цифрового сигналу в область",
+						"zh-cn": "向一个地区分配数字投入信号"
+					},
+					role: "state",
+					type: "boolean",
+					read: true,
+					write: false
 				},
-				role: "state",
-				type: "boolean",
-				read: true,
-				write: false
-				},
-		native: {}
+				native: {}
 			});
 			await this.setState("Gateway " + id + ".Setup_inputDi" + ".area" + areaId + "_inputDi", {val: data, ack: true});
 		} catch (err) {
@@ -1778,25 +1778,25 @@ class SecSmart extends utils.Adapter {
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {
 				type: "state",
 				common: {
-				name: {
-					"en": "Allocation of a digital output signal from an area",
-					"de": "Zuordnung eines digitalen Ausgangssignals aus einem Bereich",
-					"ru": "Распределение цифрового выходного сигнала из области",
-					"pt": "Alocação de um sinal de saída digital de uma área",
-					"nl": "Vertaling:",
-					"fr": "Répartition d'un signal de sortie numérique depuis une zone",
-					"it": "Distribuzione di un segnale di uscita digitale da un'area",
-					"es": "Asignación de una señal de salida digital desde un área",
-					"pl": "Alokacja cyfrowego sygnału wyjściowego z obszaru",
-					"uk": "Розміщення цифрового вихідного сигналу з області",
-					"zh-cn": "从一个地区分配数字产出信号"
+					name: {
+						"en": "Allocation of a digital output signal from an area",
+						"de": "Zuordnung eines digitalen Ausgangssignals aus einem Bereich",
+						"ru": "Распределение цифрового выходного сигнала из области",
+						"pt": "Alocação de um sinal de saída digital de uma área",
+						"nl": "Vertaling:",
+						"fr": "Répartition d'un signal de sortie numérique depuis une zone",
+						"it": "Distribuzione di un segnale di uscita digitale da un'area",
+						"es": "Asignación de una señal de salida digital desde un área",
+						"pl": "Alokacja cyfrowego sygnału wyjściowego z obszaru",
+						"uk": "Розміщення цифрового вихідного сигналу з області",
+						"zh-cn": "从一个地区分配数字产出信号"
+					},
+					role: "state",
+					type: "boolean",
+					read: true,
+					write: false
 				},
-				role: "state",
-				type: "boolean",
-				read: true,
-				write: false
-				},
-		native: {}
+				native: {}
 			});
 			await this.setState("Gateway " + id + ".Setup_outputDo" + ".area" + areaId + "_outputDo", {val: data, ack: true});
 		} catch (err) {
@@ -1809,25 +1809,25 @@ class SecSmart extends utils.Adapter {
 			await this.setObjectNotExistsAsync("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {
 				type: "state",
 				common: {
-				name: {
-					"en": "Allocation of a analog input signal to an area",
-					"de": "Zuordnung eines analogen Eingangssignals zu einem Bereich",
-					"ru": "Распределение аналогового входного сигнала в зону",
-					"pt": "Alocação de um sinal de entrada analógico para uma área",
-					"nl": "Vertaling:",
-					"fr": "Allocation d'un signal d'entrée analogique à une zone",
-					"it": "Distribuzione di un segnale di ingresso analogico a un'area",
-					"es": "Asignación de una señal de entrada analógica a una zona",
-					"pl": "Przydzielanie analogowego sygnału wejściowego do obszaru",
-					"uk": "Розподіл аналогових вхідних сигналів на область",
-					"zh-cn": "向一个地区分配类似的投入信号"
+					name: {
+						"en": "Allocation of a analog input signal to an area",
+						"de": "Zuordnung eines analogen Eingangssignals zu einem Bereich",
+						"ru": "Распределение аналогового входного сигнала в зону",
+						"pt": "Alocação de um sinal de entrada analógico para uma área",
+						"nl": "Vertaling:",
+						"fr": "Allocation d'un signal d'entrée analogique à une zone",
+						"it": "Distribuzione di un segnale di ingresso analogico a un'area",
+						"es": "Asignación de una señal de entrada analógica a una zona",
+						"pl": "Przydzielanie analogowego sygnału wejściowego do obszaru",
+						"uk": "Розподіл аналогових вхідних сигналів на область",
+						"zh-cn": "向一个地区分配类似的投入信号"
+					},
+					role: "state",
+					type: "boolean",
+					read: true,
+					write: false
 				},
-				role: "state",
-				type: "boolean",
-				read: true,
-				write: false
-				},
-		native: {}
+				native: {}
 			});
 			await this.setState("Gateway " + id + ".Setup_inputAi" + ".area" + areaId + "_inputAi", {val: data, ack: true});
 		} catch (err) {
