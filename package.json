@@ -2,10 +2,7 @@
   "name": "iobroker.sec-smart",
   "version": "0.0.2",
   "description": "Integrate the SEC Smart Gateway",
-  "author": {
-    "name": "Daniel P.",
-    "email": "daniel.pfenning@gmail.com"
-  },
+  "author": "Daniel P. <daniel.pfenning@gmail.com>",
   "homepage": "https://github.com/Dapfen/ioBroker.sec-smart",
   "license": "MIT",
   "keywords": [
@@ -15,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Dapfen/ioBroker.sec-smart.git"
+    "url": "git+https://github.com/Dapfen/ioBroker.sec-smart.git"
   },
   "engines": {
     "node": ">= 20"
@@ -71,5 +68,8 @@
   "bugs": {
     "url": "https://github.com/Dapfen/ioBroker.sec-smart/issues"
   },
-  "readmeFilename": "README.md"
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
 }
