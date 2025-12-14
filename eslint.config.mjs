@@ -33,6 +33,7 @@ export default defineConfig([globalIgnores(["**/.eslintrc.js"]), {
         }],
 
         "no-console": "off",
+        "no-unused-vars": "off",
         "no-var": "error",
         "no-trailing-spaces": "error",
         "prefer-const": "error",
