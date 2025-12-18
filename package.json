@@ -1,6 +1,6 @@
 {
   "name": "iobroker.sec-smart",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Integrate the SEC Smart Gateway",
   "author": "Daniel P. <daniel.pfenning@gmail.com>",
   "homepage": "https://github.com/Dapfen/ioBroker.sec-smart",
