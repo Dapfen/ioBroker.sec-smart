@@ -20,9 +20,6 @@ Integrate the SEC Smart Gateway from SEVentilation https://www.dezentrale-lueftu
 ### 0.0.1
 Initial release
 
-### 0.0.2
-Changed deprecated Code
-
 ## License
 MIT License
 
