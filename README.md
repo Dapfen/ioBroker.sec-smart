@@ -15,10 +15,7 @@
 Integrate the SEC Smart Gateway from SEVentilation https://www.dezentrale-lueftung.com/
 
 ## Changelog
-<!--
-	Placeholder for the next version (at the beginning of the line):
-	### **WORK IN PROGRESS**
--->
+### **WORK IN PROGRESS**
 
 ### 0.0.1
 Initial release
